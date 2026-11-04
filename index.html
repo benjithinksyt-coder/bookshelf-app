@@ -134,6 +134,15 @@ nav.tabs svg{width:24px;height:24px}
 .btn.danger{background:none;color:var(--burgundy);flex:0 0 auto}
 .note{font-size:.82rem;color:var(--muted)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-weight:700;z-index:60;font-size:.9rem}
+/* lock screen */
+.lock{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--paper) 72%,transparent);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-left,0px))}
+.lockcard{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px rgba(46,42,38,.18);padding:24px 20px;width:100%;max-width:400px;text-align:center}
+.lockcard h2{font-family:var(--display);font-size:1.5rem;margin:8px 0 6px;text-wrap:balance}
+.lockcard p{color:var(--muted);margin:0 0 16px;font-size:.95rem;line-height:1.45}
+.lockcard input{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:14px;text-align:center;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.lockmsg{min-height:1.3em;font-size:.88rem;font-weight:700;color:var(--burgundy);margin:2px 0 10px}
+.lockcard .btn{width:100%;display:block}
+.lockcard a{color:var(--sage);font-weight:800}
 @media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
 </head>
@@ -195,6 +204,17 @@ nav.tabs svg{width:24px;height:24px}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div class="lock" id="lock" hidden role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+  <form class="lockcard" id="lockForm" autocomplete="off">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--burgundy)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v15H6.5A2.5 2.5 0 0 0 4 20.5 2.5 2.5 0 0 0 6.5 23H19v-5"/><path d="M9 8h6M9 11h4"/></svg>
+    <h2 id="lockTitle">Unlock your reading year</h2>
+    <p>Enter the license key from your Payhip receipt email. You only need to do this once on each device.</p>
+    <input id="lockKey" placeholder="Paste your key" aria-label="License key" autocapitalize="characters" spellcheck="false">
+    <div class="lockmsg" id="lockMsg" aria-live="polite"></div>
+    <button class="btn primary" id="lockBtn" type="submit">Unlock</button>
+    <p style="margin:14px 0 0" id="buyLine"></p>
+  </form>
+</div>
 
 <script>
 (function(){
@@ -388,7 +408,42 @@ $("addBtn").onclick=function(){openEditor(null)};
 $("settingsBtn").onclick=openSettings;
 var rz;addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,200)});
 
-render(); fillMissingCovers();
+/* ---------- license ---------- */
+var CHECK_URL="";   // Cloudflare Worker address, e.g. https://bookshelf-key.NAME.workers.dev
+var BUY_URL="";     // Payhip product page
+var LKEY="bookshelf-license-v1", RECHECK_DAYS=7;
+var REASONS={not_found:"That key wasn't found. Check it against your Payhip receipt.",disabled:"This key has been turned off (for example after a refund).",too_many:"This key has been used on too many devices. Contact the seller to reset it.",bad_format:"That doesn't look like a license key. Copy it from your receipt.",server_not_set_up:"Unlocking isn't set up yet. Please try again later."};
+function getLic(){try{return JSON.parse(localStorage.getItem(LKEY))}catch(e){return null}}
+function setLic(v){try{if(v)localStorage.setItem(LKEY,JSON.stringify(v));else localStorage.removeItem(LKEY)}catch(e){}}
+function callKey(path,key){return fetch(CHECK_URL.replace(/\/$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:key})}).then(function(r){return r.json()})}
+function showLock(){
+  $("lock").hidden=false;
+  $("buyLine").innerHTML=BUY_URL?'No key yet? <a href="'+esc(BUY_URL)+'" target="_blank" rel="noopener">Get My Reading Year</a>':'';
+  setTimeout(function(){$("lockKey").focus()},200);
+}
+$("lockForm").addEventListener("submit",function(e){
+  e.preventDefault();var key=$("lockKey").value.trim().toUpperCase();
+  if(!key){$("lockMsg").textContent="Paste your license key first.";return}
+  $("lockBtn").disabled=true;$("lockBtn").textContent="Checking…";$("lockMsg").textContent="";
+  callKey("/activate",key).then(function(res){
+    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;toast("Unlocked. Happy reading!")}
+    else $("lockMsg").textContent=REASONS[res&&res.reason]||"That key didn't work. Check it and try again.";
+  }).catch(function(){$("lockMsg").textContent="Couldn't connect. Check your internet and try again."})
+  .then(function(){$("lockBtn").disabled=false;$("lockBtn").textContent="Unlock"});
+});
+function licenseGate(){
+  if(!CHECK_URL)return;                 // gate switched off until the checker is live
+  var lic=getLic();
+  if(!lic||!lic.key){showLock();return}
+  if(Date.now()-(lic.checked||0)>RECHECK_DAYS*864e5){
+    callKey("/check",lic.key).then(function(res){
+      if(res&&res.ok){lic.checked=Date.now();setLic(lic)}
+      else if(res&&(res.reason==="disabled"||res.reason==="not_found")){setLic(null);showLock()}
+    }).catch(function(){});              // offline: keep working, try again next time
+  }
+}
+
+render(); fillMissingCovers(); licenseGate();
 })();
 </script>
 </body>
