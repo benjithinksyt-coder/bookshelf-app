@@ -253,7 +253,7 @@ function stars(n){n=+n||0;return n?"★★★★★".slice(0,n)+"☆☆☆☆☆
 function yearOf(b){return b.end?+b.end.slice(0,4):0}
 function finishedThisYear(){return state.books.filter(function(b){return b.status==="Finished"&&yearOf(b)===+state.year}).sort(function(a,b){return a.end<b.end?-1:1})}
 function coverHTML(b,cls){
-  if(b.cover) return '<img class="cover '+(cls||"")+'" src="'+esc(b.cover)+'" alt="Cover of '+esc(b.title)+'" loading="lazy" onerror="this.outerHTML=window.__fake(this.dataset.id)" data-id="'+b.id+'">';
+  if(b.cover) return '<img class="cover '+(cls||"")+'" src="'+esc(b.cover)+'" alt="Cover of '+esc(b.title)+'" loading="lazy" decoding="async" onerror="this.outerHTML=window.__fake(this.dataset.id)" data-id="'+b.id+'">';
   return fake(b);
 }
 function fake(b){return '<div class="fakecover" style="background:'+gcolor(b.genre)+'"><span>'+esc(b.title)+'</span><em>'+esc(b.author||"")+'</em></div>'}
@@ -266,9 +266,11 @@ function coverUrl(id,size){return "https://covers.openlibrary.org/b/id/"+id+"-"+
 function searchBooks(q){return fetch(OL+encodeURIComponent(q)).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.docs||[]})}
 function fillMissingCovers(){
   var todo=state.books.filter(function(b){return !b.cover&&!b.coverTried}).slice(0,12);
-  todo.reduce(function(p,b){return p.then(function(){return searchBooks(b.title+" "+(b.author||"")).then(function(d){
-    b.coverTried=true;var hit=d.find(function(x){return x.cover_i});if(hit){b.cover=coverUrl(hit.cover_i)}save();render();
-  }).catch(function(){})})},Promise.resolve());
+  if(!todo.length)return;
+  // look covers up together, then redraw once (redrawing per book made covers flicker)
+  Promise.all(todo.map(function(b){return searchBooks(b.title+" "+(b.author||"")).then(function(d){
+    b.coverTried=true;var hit=d.find(function(x){return x.cover_i});if(hit){b.cover=coverUrl(hit.cover_i);return true}
+  }).catch(function(){})})).then(function(res){save();if(res.some(Boolean))render()});
 }
 
 /* ---------- render ---------- */
@@ -409,7 +411,8 @@ $("filters").onclick=function(e){var v=e.target.getAttribute("data-filter");if(v
 $("libSearch").oninput=function(){renderLibrary();bindOpen()};
 $("addBtn").onclick=function(){openEditor(null)};
 $("settingsBtn").onclick=openSettings;
-var rz;addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,200)});
+// phones fire "resize" while scrolling (address bar shrinks) — only redraw when the width really changes
+var rz, lastW=innerWidth;addEventListener("resize",function(){if(innerWidth===lastW)return;lastW=innerWidth;clearTimeout(rz);rz=setTimeout(render,200)});
 
 /* ---------- license ---------- */
 var CHECK_URL="https://bookshelf-key.z6cbt9mnkg.workers.dev";   // Cloudflare Worker address, e.g. https://bookshelf-key.NAME.workers.dev
