@@ -134,6 +134,7 @@ nav.tabs svg{width:24px;height:24px}
 .btn.danger{background:none;color:var(--burgundy);flex:0 0 auto}
 .note{font-size:.82rem;color:var(--muted)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-weight:700;z-index:60;font-size:.9rem}
+.trialpill{position:fixed;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:21;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:.8rem;border-radius:999px;padding:9px 13px;box-shadow:var(--shadow)}
 /* lock screen */
 .lock{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--paper) 72%,transparent);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-left,0px))}
 .lockcard{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px rgba(46,42,38,.18);padding:24px 20px;width:100%;max-width:400px;text-align:center}
@@ -204,6 +205,7 @@ nav.tabs svg{width:24px;height:24px}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
+<button class="trialpill" id="trialPill" type="button" hidden></button>
 <div class="lock" id="lock" hidden role="dialog" aria-modal="true" aria-labelledby="lockTitle">
   <form class="lockcard" id="lockForm" autocomplete="off">
     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--burgundy)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v15H6.5A2.5 2.5 0 0 0 4 20.5 2.5 2.5 0 0 0 6.5 23H19v-5"/><path d="M9 8h6M9 11h4"/></svg>
@@ -422,19 +424,45 @@ var REASONS={not_found:"That key wasn't found. Check it against your Payhip rece
 function getLic(){try{return JSON.parse(localStorage.getItem(LKEY))}catch(e){return null}}
 function setLic(v){try{if(v)localStorage.setItem(LKEY,JSON.stringify(v));else localStorage.removeItem(LKEY)}catch(e){}}
 function callKey(path,key){return fetch(CHECK_URL.replace(/\/$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:key})}).then(function(r){return r.json()})}
-function isLocked(){var l=getLic();return !!CHECK_URL&&!(l&&l.key)}
+/* free trial: full app for 30 minutes per browser, then the lock comes back */
+var TKEY="bookshelf-trial-v1", TRIAL_MS=30*60*1000, memTrial=0, ticker=null;
+function trialStart(){try{return +localStorage.getItem(TKEY)||memTrial}catch(e){return memTrial}}
+function startTrial(){memTrial=Date.now();try{localStorage.setItem(TKEY,String(memTrial))}catch(e){}}
+function trialLeft(){var s=trialStart();return s?Math.max(0,s+TRIAL_MS-Date.now()):0}
+function hasKey(){var l=getLic();return !!(l&&l.key)}
+function isLocked(){return !!CHECK_URL&&!hasKey()&&trialLeft()<=0}
+function mins(ms){return Math.max(1,Math.ceil(ms/60000))}
+function tick(){
+  var pill=$("trialPill");
+  if(hasKey()){pill.hidden=true;clearInterval(ticker);ticker=null;return}
+  var left=trialLeft();
+  if(left>0){pill.hidden=false;pill.textContent="Free trial · "+mins(left)+" min left";return}
+  pill.hidden=true;clearInterval(ticker);ticker=null;
+  if(!$("scrim").hidden)closeSheet();
+  showLock("Your free 30 minutes are up. Enter your key to keep your shelf.");
+}
+function runTrial(){tick();if(!ticker)ticker=setInterval(tick,15000)}
 function showLock(msg){
   $("lock").hidden=false;
   $("lockMsg").textContent=msg||"";
+  var started=trialStart(), left=trialLeft(), pb=$("peekBtn");
+  pb.hidden=!!started&&left<=0;
+  pb.textContent=started?("Keep trying · "+mins(left)+" min left"):"Try it free for 30 minutes";
   $("buyLine").innerHTML=BUY_URL?'No key yet? <a href="'+esc(BUY_URL)+'" target="_blank" rel="noopener">Get My Reading Year</a>':'';
 }
-$("peekBtn").onclick=function(){$("lock").hidden=true;toast("Preview mode: tap around the example shelf")};
+$("peekBtn").onclick=function(){
+  var first=!trialStart();if(first)startTrial();
+  if(trialLeft()<=0){showLock("Your free 30 minutes are up. Enter your key to keep your shelf.");return}
+  $("lock").hidden=true;runTrial();
+  toast(first?"Your 30-minute free trial has started":"Trial: "+mins(trialLeft())+" min left");
+};
+$("trialPill").onclick=function(){showLock()};
 $("lockForm").addEventListener("submit",function(e){
   e.preventDefault();var key=$("lockKey").value.trim().toUpperCase();
   if(!key){$("lockMsg").textContent="Paste your license key first.";return}
   $("lockBtn").disabled=true;$("lockBtn").textContent="Checking…";$("lockMsg").textContent="";
   callKey("/activate",key).then(function(res){
-    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;toast("Unlocked. Happy reading!")}
+    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;$("trialPill").hidden=true;toast("Unlocked. Happy reading!")}
     else $("lockMsg").textContent=REASONS[res&&res.reason]||"That key didn't work. Check it and try again.";
   }).catch(function(){$("lockMsg").textContent="Couldn't connect. Check your internet and try again."})
   .then(function(){$("lockBtn").disabled=false;$("lockBtn").textContent="Unlock"});
@@ -442,7 +470,7 @@ $("lockForm").addEventListener("submit",function(e){
 function licenseGate(){
   if(!CHECK_URL)return;                 // gate switched off until the checker is live
   var lic=getLic();
-  if(!lic||!lic.key){showLock();return}
+  if(!lic||!lic.key){if(trialLeft()>0)runTrial();else showLock();return}
   if(Date.now()-(lic.checked||0)>RECHECK_DAYS*864e5){
     callKey("/check",lic.key).then(function(res){
       if(res&&res.ok){lic.checked=Date.now();setLic(lic)}
