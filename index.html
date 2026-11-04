@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bookshelf">
@@ -27,8 +31,11 @@
   --sage:#9DBB97; --sage-soft:#2F3A2D; --burgundy:#D98A97; --wood:#7A5638; --wood-dark:#5C4029;
   --gold:#E2B552; --slot:#352D27; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3); color-scheme:dark}
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+/* app shell: the screen stays put, only the middle area scrolls (no page bounce, no zoom) */
+.app{position:fixed;inset:0;display:flex;flex-direction:column}
+.scroller{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:touch;padding-bottom:84px}
+button,.spine,.bookbtn,nav.tabs{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 img{max-width:100%}
 [hidden]{display:none!important}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -100,20 +107,24 @@ h3.sec span{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weig
 .hbar .track b{display:block;height:100%;border-radius:999px}
 .hbar span:last-child{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
 /* tab bar + fab */
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20}
+nav.tabs{position:relative;flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20}
 nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:800;color:var(--muted);padding:6px}
 nav.tabs button[aria-current="page"]{color:var(--burgundy)}
 nav.tabs svg{width:24px;height:24px}
-.fab{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 18px));bottom:calc(84px + env(safe-area-inset-bottom,0px));border:0;border-radius:999px;background:var(--burgundy);color:#fff;font-weight:800;padding:14px 20px;box-shadow:0 8px 22px rgba(122,46,58,.35);z-index:21;display:flex;align-items:center;gap:8px}
+.fab{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 18px));bottom:calc(80px + env(safe-area-inset-bottom,0px));border:0;border-radius:999px;background:var(--burgundy);color:#fff;font-weight:800;padding:14px 20px;box-shadow:0 8px 22px rgba(122,46,58,.35);z-index:21;display:flex;align-items:center;gap:8px}
 /* sheet */
-.scrim{position:fixed;inset:0;background:rgba(20,16,12,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
-.sheet{background:var(--paper);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px max(18px,env(safe-area-inset-left,0px)) calc(24px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.2)}
-.sheet h2{font-family:var(--display);margin:4px 0 12px;font-size:1.35rem}
-.grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 8px}
+/* full-screen pages (add / edit / settings) with a back arrow */
+.scrim{position:fixed;inset:0;background:var(--paper);z-index:40;display:flex;flex-direction:column}
+.pagebar{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:calc(8px + env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) 8px max(10px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);background:var(--paper)}
+.pagebar .back{border:0;background:none;display:flex;align-items:center;gap:2px;font-weight:800;color:var(--burgundy);padding:8px 6px;font-size:1rem}
+.pagebar .ptitle{font-family:var(--display);font-weight:700;font-size:1.15rem;flex:1;text-align:center;margin-right:64px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sheet{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch;width:100%;max-width:640px;margin:0 auto;padding:16px max(18px,env(safe-area-inset-left,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-right,0px))}
+.sheet h2{display:none}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 .field label{font-size:.8rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .field input,.field select,.field textarea{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px;width:100%}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two>.field{min-width:0}.field input,.field select{min-width:0;max-width:100%}input[type=date]{-webkit-appearance:none;appearance:none;min-height:46px}
 .results{display:flex;flex-direction:column;gap:8px;margin:-4px 0 12px}
 .res{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px}
 .res .cover,.res .fakecover{width:44px}
@@ -135,6 +146,18 @@ nav.tabs svg{width:24px;height:24px}
 .note{font-size:.82rem;color:var(--muted)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-weight:700;z-index:60;font-size:.9rem}
 .trialpill{position:fixed;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:21;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:.8rem;border-radius:999px;padding:9px 13px;box-shadow:var(--shadow)}
+/* add-to-home-screen prompt */
+.install{position:fixed;inset:0;z-index:90;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(24px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(22px,env(safe-area-inset-left,0px));overflow-y:auto}
+.install .appicon{width:88px;height:88px;border-radius:22px;box-shadow:0 10px 26px rgba(46,42,38,.22)}
+.install h2{font-family:var(--display);font-size:1.6rem;margin:18px 0 6px;text-wrap:balance}
+.install > p{color:var(--muted);margin:0 0 20px;max-width:340px;line-height:1.45}
+.isteps{list-style:none;padding:0;margin:0 0 22px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.isteps li{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:600;line-height:1.35}
+.isteps b.n{width:32px;height:32px;border-radius:50%;background:var(--sage);color:#fff;display:grid;place-items:center;font-size:.95rem}
+.isteps svg{vertical-align:-5px;color:#2F6FD6}
+.install .btn{width:100%;max-width:360px}
+.install .later{border:0;background:none;color:var(--muted);font-weight:700;margin-top:14px;padding:8px}
+.install .tip{font-size:.82rem;color:var(--muted);max-width:340px;margin-top:6px}
 /* lock screen */
 .lock{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--paper) 72%,transparent);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-left,0px))}
 .lockcard{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px rgba(46,42,38,.18);padding:24px 20px;width:100%;max-width:400px;text-align:center}
@@ -144,11 +167,11 @@ nav.tabs svg{width:24px;height:24px}
 .lockmsg{min-height:1.3em;font-size:.88rem;font-weight:700;color:var(--burgundy);margin:2px 0 10px}
 .lockcard .btn{width:100%;display:block}
 .lockcard a{color:var(--sage);font-weight:800}
-@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}}
+@media (prefers-reduced-motion:no-preference){.scrim{animation:slidein .2s ease-out}@keyframes slidein{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app"><div class="scroller" id="scroller"><div class="wrap">
   <header class="top">
     <div class="brand"><small id="yearLabel">2026</small>My Reading Year</div>
     <button class="iconbtn" id="settingsBtn" aria-label="Settings">
@@ -191,7 +214,7 @@ nav.tabs svg{width:24px;height:24px}
     <h3 class="sec">How you read</h3>
     <div class="card" id="formats"></div>
   </main>
-</div>
+</div></div>
 
 <button class="fab" id="addBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add book</button>
 
@@ -200,11 +223,31 @@ nav.tabs svg{width:24px;height:24px}
   <button data-tab="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="9" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Library</button>
   <button data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>Stats</button>
 </nav>
+</div>
 
-<div class="scrim" id="scrim" hidden>
-  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
+<div class="scrim" id="scrim" hidden role="dialog" aria-modal="true" aria-labelledby="pageTitle">
+  <div class="pagebar"><button class="back" id="backBtn" type="button" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><span class="ptitle" id="pageTitle"></span></div>
+  <div class="sheet" id="sheet"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div class="install" id="install" hidden role="dialog" aria-modal="true" aria-labelledby="installTitle">
+  <img class="appicon" src="icon-180.png" alt="">
+  <h2 id="installTitle">Put My Reading Year on your Home Screen</h2>
+  <p>It opens full screen like a real app, with no address bar, one tap from your Home Screen.</p>
+  <ol class="isteps" id="iosSteps">
+    <li><b class="n">1</b><span>Tap the <b>Share</b> button <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Share icon"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg> in Safari's toolbar</span></li>
+    <li><b class="n">2</b><span>Scroll down and tap <b>Add to Home Screen</b></span></li>
+    <li><b class="n">3</b><span>Tap <b>Add</b>, then open <b>Bookshelf</b> from your Home Screen</span></li>
+  </ol>
+  <ol class="isteps" id="droidSteps" hidden>
+    <li><b class="n">1</b><span>Tap the <b>⋮</b> menu in Chrome</span></li>
+    <li><b class="n">2</b><span>Tap <b>Add to Home screen</b> (or <b>Install app</b>)</span></li>
+    <li><b class="n">3</b><span>Open <b>Bookshelf</b> from your Home Screen</span></li>
+  </ol>
+  <button class="btn primary" id="installBtn" type="button" hidden>Install app</button>
+  <p class="tip">Unlock and add your books in the Home Screen app. It keeps its own shelf, separate from Safari.</p>
+  <button class="later" id="installLater" type="button">Continue in browser</button>
+</div>
 <button class="trialpill" id="trialPill" type="button" hidden></button>
 <div class="lock" id="lock" hidden role="dialog" aria-modal="true" aria-labelledby="lockTitle">
   <form class="lockcard" id="lockForm" autocomplete="off">
@@ -337,8 +380,9 @@ function renderStats(){
 function bindOpen(){document.querySelectorAll("[data-open]").forEach(function(el){el.onclick=function(){openEditor(el.getAttribute("data-open"))}})}
 
 /* ---------- editor sheet ---------- */
-function openSheet(html){$("sheet").innerHTML='<div class="grab"></div>'+html;$("scrim").hidden=false;document.body.style.overflow="hidden"}
-function closeSheet(){$("scrim").hidden=true;document.body.style.overflow=""}
+function openSheet(html){var m=html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/);$("pageTitle").textContent=m?m[1]:"";$("sheet").innerHTML=html;$("sheet").scrollTop=0;$("scrim").hidden=false}
+function closeSheet(){$("scrim").hidden=true}
+$("backBtn").onclick=function(){closeSheet()};
 $("scrim").addEventListener("click",function(e){if(e.target.id==="scrim")closeSheet()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("scrim").hidden)closeSheet()});
 
@@ -407,7 +451,7 @@ function openSettings(){
 
 /* ---------- tabs ---------- */
 function setTab(t){tab=t;["shelf","library","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
-  document.querySelectorAll("nav.tabs button").forEach(function(b){if(b.getAttribute("data-tab")===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});scrollTo(0,0)}
+  document.querySelectorAll("nav.tabs button").forEach(function(b){if(b.getAttribute("data-tab")===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});$("scroller").scrollTop=0}
 document.querySelectorAll("nav.tabs button").forEach(function(b){b.onclick=function(){setTab(b.getAttribute("data-tab"))}});
 $("filters").onclick=function(e){var v=e.target.getAttribute("data-filter");if(v){filter=v;renderLibrary();bindOpen()}};
 $("libSearch").oninput=function(){renderLibrary();bindOpen()};
@@ -479,7 +523,26 @@ function licenseGate(){
   }
 }
 
-render(); fillMissingCovers(); licenseGate();
+/* ---------- add to home screen ---------- */
+var UA=navigator.userAgent||"";
+var isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+var isAndroid=/android/i.test(UA);
+var isStandalone=navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
+var deferredInstall=null;
+addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredInstall=e;$("installBtn").hidden=false});
+function maybeInstallPrompt(){
+  if(isStandalone||!(isIOS||isAndroid))return;
+  var seen=false;try{seen=sessionStorage.getItem("bookshelf-install-seen")==="1"}catch(e){}
+  if(seen)return;
+  $("iosSteps").hidden=!isIOS;$("droidSteps").hidden=isIOS;
+  $("install").hidden=false;
+}
+$("installLater").onclick=function(){$("install").hidden=true;try{sessionStorage.setItem("bookshelf-install-seen","1")}catch(e){}};
+$("installBtn").onclick=function(){if(!deferredInstall)return;deferredInstall.prompt();deferredInstall.userChoice.then(function(){deferredInstall=null;$("installBtn").hidden=true})};
+// no pinch-zoom (Safari ignores user-scalable=no in the browser)
+["gesturestart","gesturechange"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
+
+render(); fillMissingCovers(); licenseGate(); maybeInstallPrompt();
 })();
 </script>
 </body>
