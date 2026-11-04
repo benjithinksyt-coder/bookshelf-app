@@ -107,7 +107,7 @@ h3.sec span{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weig
 .hbar .track b{display:block;height:100%;border-radius:999px}
 .hbar span:last-child{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
 /* tab bar + fab */
-nav.tabs{position:relative;flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20}
+nav.tabs{position:relative;flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20}
 nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:800;color:var(--muted);padding:6px}
 nav.tabs button[aria-current="page"]{color:var(--burgundy)}
 nav.tabs svg{width:24px;height:24px}
@@ -146,6 +146,22 @@ nav.tabs svg{width:24px;height:24px}
 .note{font-size:.82rem;color:var(--muted)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-weight:700;z-index:60;font-size:.9rem}
 .trialpill{position:fixed;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:21;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:.8rem;border-radius:999px;padding:9px 13px;box-shadow:var(--shadow)}
+/* store */
+.srow{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px}
+.srow .cover,.srow .fakecover{width:64px}
+.srow .info{min-width:0;display:flex;flex-direction:column;gap:3px}
+.srow .open{border:0;background:none;padding:0;text-align:left;font-family:var(--display);font-weight:600;font-size:1rem;line-height:1.2;color:var(--ink)}
+.srow .by{color:var(--muted);font-size:.84rem}
+.rate{font-size:.84rem;font-weight:700;color:var(--ink)}.rate i{font-style:normal;color:var(--gold)}.rate span{color:var(--muted);font-weight:600}
+.sbtns{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.sbtn{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 12px;font-weight:800;font-size:.8rem;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.sbtn.amz{background:#FFD814;border-color:#F2C200;color:#111}
+.sbtn.done{color:var(--sage);border-color:var(--sage)}
+.detail{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start;margin-bottom:14px}
+.detail .cover,.detail .fakecover{width:120px}
+.desc{line-height:1.55;font-size:.95rem;white-space:pre-line}
+.subj{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.subj span{font-size:.75rem;font-weight:700;background:var(--slot);color:var(--muted);border-radius:999px;padding:4px 9px}
 /* add-to-home-screen prompt */
 .install{position:fixed;inset:0;z-index:90;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(24px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(22px,env(safe-area-inset-left,0px));overflow-y:auto}
 .install .appicon{width:88px;height:88px;border-radius:22px;box-shadow:0 10px 26px rgba(46,42,38,.22)}
@@ -205,6 +221,13 @@ nav.tabs svg{width:24px;height:24px}
     <div class="grid" id="libGrid"></div>
   </main>
 
+  <main id="view-store" hidden>
+    <input class="search" id="storeSearch" type="search" placeholder="Search any book or author" aria-label="Search books" autocomplete="off">
+    <div class="filters" id="storeChips" role="group" aria-label="Browse"></div>
+    <div id="storeList"></div>
+    <p class="note" id="storeNote" style="margin-top:16px"></p>
+  </main>
+
   <main id="view-stats" hidden>
     <div class="tiles" id="tiles"></div>
     <h3 class="sec">Books per month</h3>
@@ -221,6 +244,7 @@ nav.tabs svg{width:24px;height:24px}
 <nav class="tabs" aria-label="Sections">
   <button data-tab="shelf" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20h16M6 20V6h3v14M10 20V4h3v16M15 20l-1-12 3-.5 2 12.5"/></svg>Shelf</button>
   <button data-tab="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="9" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Library</button>
+  <button data-tab="store"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.5 12a2 2 0 0 1-2 1.8h-9a2 2 0 0 1-2-1.8z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/></svg>Store</button>
   <button data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>Stats</button>
 </nav>
 </div>
@@ -273,23 +297,9 @@ var thisYear=new Date().getFullYear();
 var state=load();
 var tab="shelf", filter="All";
 
-function sample(){
-  var y=thisYear, mk=function(t,a,g,f,p,s,st,en,r){return{id:uid(),title:t,author:a,genre:g,format:f,pages:p,status:s,start:st?y+"-"+st:"",end:en?y+"-"+en:"",rating:r||0,notes:"",cover:"",sample:true}};
-  return {year:y,goal:24,seenIntro:false,books:[
-    mk("Pride and Prejudice","Jane Austen","Romance","Print",432,"Finished","01-02","01-14",5),
-    mk("Frankenstein","Mary Shelley","Horror","Ebook",280,"Finished","01-16","01-24",4),
-    mk("The Great Gatsby","F. Scott Fitzgerald","Classics","Audiobook",180,"Finished","02-01","02-05",4),
-    mk("Dracula","Bram Stoker","Horror","Print",418,"Finished","02-08","02-25",5),
-    mk("Little Women","Louisa May Alcott","Classics","Print",449,"Finished","03-01","03-20",4),
-    mk("The Adventures of Sherlock Holmes","Arthur Conan Doyle","Mystery","Ebook",307,"Finished","04-02","04-12",5),
-    mk("Jane Eyre","Charlotte Bronte","Romance","Audiobook",500,"Finished","04-15","05-06",4),
-    mk("The Time Machine","H. G. Wells","Sci-Fi","Ebook",118,"Finished","05-08","05-10",3),
-    mk("Anne of Green Gables","L. M. Montgomery","Classics","Print",320,"Reading","06-01","",0),
-    mk("Wuthering Heights","Emily Bronte","Romance","Print",416,"TBR","","",0),
-    mk("Emma","Jane Austen","Romance","Print",474,"TBR","","",0)]};
-}
+function sample(){return {year:thisYear,goal:24,books:[]}}   // every new shelf starts empty
 function uid(){return Math.random().toString(36).slice(2,10)}
-function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.books)return s}catch(e){}return sample()}
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.books){s.books=s.books.filter(function(b){return !b.sample});return s}}catch(e){}return sample()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast("Couldn't save on this device. Use Backup to keep a copy.")}}
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -336,7 +346,7 @@ function render(){
     var d=b.start?Math.max(1,Math.round((Date.now()-new Date(b.start))/864e5)):0;
     var prog=b.pages&&b.page?Math.min(100,Math.round(b.page/b.pages*100)):0;
     return '<button class="card now bookbtn" style="flex-direction:row;display:grid;width:100%" data-open="'+b.id+'"><div>'+coverHTML(b)+'</div><div style="min-width:0"><div class="title">'+esc(b.title)+'</div><div class="author">'+esc(b.author)+'</div><div class="note" style="margin-top:6px">'+(b.page?("Page "+b.page+" of "+b.pages):(d?("Started "+d+" day"+(d>1?"s":"")+" ago"):"Just started"))+'</div><div class="bar"><b style="width:'+prog+'%"></b></div></div></button>';
-  }).join(""):'<div class="card note">Nothing on the go. Tap <b>Add book</b> and set it to Reading.</div>';
+  }).join(""):'<div class="card note">Nothing on the go yet. Tap <b>Add book</b>, or find one in the <b>Store</b>.</div>';
   // shelf
   var slots=Math.max(goal,fin.length), perRow=Math.max(8,Math.floor((Math.min(innerWidth,720)-60)/32)), rows=[], html="";
   for(var i=0;i<slots;i+=perRow){rows.push(i)}
@@ -401,7 +411,7 @@ function openEditor(id){
     '<div class="two"><div class="field"><label for="fStart">Started</label><input id="fStart" type="date" value="'+esc(b.start)+'"></div><div class="field"><label for="fEnd">Finished</label><input id="fEnd" type="date" value="'+esc(b.end)+'"></div></div>'+
     '<div class="field"><label>Rating</label><div class="ratingpick" id="rate">'+[1,2,3,4,5].map(function(n){return '<button type="button" data-v="'+n+'" aria-label="'+n+' stars" class="'+(n<=b.rating?"on":"")+'">★</button>'}).join("")+'</div></div>'+
     '<div class="field"><label for="fNotes">Notes</label><textarea id="fNotes" rows="3" placeholder="Favorite quote, thoughts, who recommended it">'+esc(b.notes)+'</textarea></div>'+
-    '<div class="actions">'+(isNew?'':'<button type="button" class="btn danger" id="delBtn">Delete</button>')+'<button type="button" class="btn ghost" id="cancelBtn">Cancel</button><button type="button" class="btn primary" id="saveBtn">'+(isNew?"Add to shelf":"Save")+'</button></div>'
+    (isNew?'':'<p style="margin:0 0 12px"><a class="sbtn amz" href="'+amazonUrl(b.title,b.author)+'" target="_blank" rel="noopener sponsored">See it on Amazon ↗</a></p>')+'<div class="actions">'+(isNew?'':'<button type="button" class="btn danger" id="delBtn">Delete</button>')+'<button type="button" class="btn ghost" id="cancelBtn">Cancel</button><button type="button" class="btn primary" id="saveBtn">'+(isNew?"Add to shelf":"Save")+'</button></div>'
   );
   var status=b.status, rating=+b.rating||0, cover=b.cover;
   $("sStatus").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;status=v;[].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",c.getAttribute("data-v")===v)});
@@ -438,19 +448,18 @@ function openSettings(){
   openSheet('<h2 id="sheetTitle">Settings</h2>'+
     '<div class="two"><div class="field"><label for="sYear">Year</label><input id="sYear" inputmode="numeric" value="'+state.year+'"></div><div class="field"><label for="sGoal">Reading goal</label><input id="sGoal" inputmode="numeric" value="'+state.goal+'"></div></div>'+
     '<div class="field"><label>Back up your books</label><p class="note" style="margin:0 0 8px">Your books are saved on this phone, in this browser. Download a backup now and then, and use it to move your shelf to a new phone.</p><div class="actions" style="margin:0"><button type="button" class="btn ghost" id="expBtn">Download backup</button><label class="btn ghost" style="text-align:center" for="impFile">Restore backup</label><input type="file" id="impFile" accept="application/json,.json" hidden></div></div>'+
-    '<div class="field"><label>Start fresh</label><p class="note" style="margin:0 0 8px">Remove the example classics, or everything, to begin your own shelf.</p><div class="actions" style="margin:0"><button type="button" class="btn ghost" id="clrSample">Remove examples</button><button type="button" class="btn danger" id="clrAll">Clear all</button></div></div>'+
+    '<div class="field"><label>Start fresh</label><p class="note" style="margin:0 0 8px">Delete every book and start a new shelf.</p><div class="actions" style="margin:0"><button type="button" class="btn danger" id="clrAll" style="flex:1;border:1px solid var(--line);border-radius:14px">Clear all books</button></div></div>'+
     '<p class="note">Add to your home screen: in Safari tap Share, then Add to Home Screen. In Chrome tap ⋮, then Add to Home screen.</p>'+
     '<p class="note">Covers and book details come from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>.</p>'+
     '<div class="actions"><button type="button" class="btn primary" id="sSave">Done</button></div>');
   $("sSave").onclick=function(){state.year=parseInt($("sYear").value,10)||thisYear;state.goal=Math.max(1,parseInt($("sGoal").value,10)||24);save();closeSheet();render()};
   $("expBtn").onclick=function(){var blob=new Blob([JSON.stringify(state,null,1)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-bookshelf-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);toast("Backup downloaded")};
   $("impFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.books)throw 0;state=s;save();closeSheet();render();toast("Shelf restored")}catch(e){toast("That file isn't a bookshelf backup")}};r.readAsText(f)};
-  $("clrSample").onclick=function(){state.books=state.books.filter(function(b){return !b.sample});save();closeSheet();render();toast("Examples removed")};
   var armed=false;$("clrAll").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to clear";return}state.books=[];save();closeSheet();render();toast("Shelf cleared")};
 }
 
 /* ---------- tabs ---------- */
-function setTab(t){tab=t;["shelf","library","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
+function setTab(t){tab=t;if(t==="store"&&!storeLoaded){storeLoaded=true;renderStore();loadStore("chip",storeChip)}["shelf","library","store","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
   document.querySelectorAll("nav.tabs button").forEach(function(b){if(b.getAttribute("data-tab")===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});$("scroller").scrollTop=0}
 document.querySelectorAll("nav.tabs button").forEach(function(b){b.onclick=function(){setTab(b.getAttribute("data-tab"))}});
 $("filters").onclick=function(e){var v=e.target.getAttribute("data-filter");if(v){filter=v;renderLibrary();bindOpen()}};
@@ -522,6 +531,71 @@ function licenseGate(){
     }).catch(function(){});              // offline: keep working, try again next time
   }
 }
+
+/* ---------- store (Open Library + Amazon links) ---------- */
+var AMAZON_TAG="";   // Amazon Associates tracking ID, e.g. "benjibooks-20" — leave empty until approved
+var SF="key,title,author_name,cover_i,first_publish_year,number_of_pages_median,ratings_average,ratings_count,want_to_read_count,subject";
+var CHIPS=[["trending","Trending"],["romantasy","Romantasy"],["fantasy","Fantasy"],["romance","Romance"],["thriller","Thriller"],["mystery","Mystery"],["science_fiction","Sci-Fi"],["horror","Horror"],["self-help","Self-help"],["biography","Memoir"]];
+var storeChip="trending", storeDocs=[], storeCache={}, storeTimer, storeSeq=0;
+function amazonUrl(t,a){return "https://www.amazon.com/s?k="+encodeURIComponent((t||"")+" "+(a||""))+"&i=stripbooks"+(AMAZON_TAG?"&tag="+encodeURIComponent(AMAZON_TAG):"")}
+function getJSON(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+function storeFetch(kind,v){
+  var ck=kind+":"+v; if(storeCache[ck])return Promise.resolve(storeCache[ck]);
+  var u = kind==="chip"&&v==="trending" ? "https://openlibrary.org/trending/daily.json?limit=24"
+        : kind==="chip" ? "https://openlibrary.org/search.json?q="+encodeURIComponent('subject:"'+v.replace(/_/g," ")+'"')+"&sort=rating&limit=24&fields="+SF
+        : "https://openlibrary.org/search.json?q="+encodeURIComponent(v)+"&limit=24&fields="+SF;
+  return getJSON(u).then(function(j){var d=(j.works||j.docs||[]).filter(function(x){return x.title});storeCache[ck]=d;return d});
+}
+function stars5(avg){var n=Math.round(avg);return "★★★★★".slice(0,n)+"☆☆☆☆☆".slice(0,5-n)}
+function rateHTML(d){return d.ratings_average?'<div class="rate"><i>'+stars5(d.ratings_average)+'</i> '+d.ratings_average.toFixed(1)+' <span>('+(d.ratings_count||0).toLocaleString()+' ratings)</span></div>':(d.want_to_read_count?'<div class="rate"><span>'+d.want_to_read_count.toLocaleString()+' want to read</span></div>':'')}
+function inShelf(d){var t=(d.title||"").toLowerCase();return state.books.some(function(b){return b.title.toLowerCase()===t})}
+function docAuthor(d){return (d.author_name||[""])[0]||""}
+function guessGenre(subj){var s=(subj||[]).join(" ").toLowerCase();var map=[["romantasy","Romantasy"],["graphic novel","Graphic novel"],["comic","Graphic novel"],["young adult","Young Adult"],["science fiction","Sci-Fi"],["fantasy","Fantasy"],["thriller","Thriller"],["suspense","Thriller"],["mystery","Mystery"],["detective","Mystery"],["horror","Horror"],["romance","Romance"],["love stories","Romance"],["historical","Historical"],["self-help","Self-help"],["biography","Memoir"],["memoir","Memoir"],["classic","Classics"]];for(var i=0;i<map.length;i++)if(s.indexOf(map[i][0])>-1)return map[i][1];return "Other"}
+function addToTBR(d){
+  if(isLocked()){showLock("Unlock to save books to your shelf.");return false}
+  if(inShelf(d)){toast("Already on your shelf");return false}
+  state.books.unshift({id:uid(),title:d.title,author:docAuthor(d),genre:guessGenre(d.subject),format:"Print",pages:d.number_of_pages_median||"",page:"",status:"TBR",start:"",end:"",rating:0,notes:"",cover:d.cover_i?coverUrl(d.cover_i):"",coverTried:true});
+  save();render();toast("Added to To read");return true;
+}
+function renderStore(){
+  $("storeChips").innerHTML=CHIPS.map(function(c){return '<button aria-pressed="'+(storeChip===c[0]&&!$("storeSearch").value.trim())+'" data-chip="'+c[0]+'">'+c[1]+'</button>'}).join("");
+  $("storeNote").innerHTML='Ratings come from Open Library readers. Prices and Amazon reviews open on Amazon.'+(AMAZON_TAG?' As an Amazon Associate I earn from qualifying purchases.':'');
+}
+function drawStore(docs){
+  storeDocs=docs;
+  $("storeList").innerHTML=docs.length?docs.map(function(d,i){var fb={id:"s"+i,title:d.title,author:docAuthor(d),genre:guessGenre(d.subject),cover:d.cover_i?coverUrl(d.cover_i):""};var have=inShelf(d);
+    return '<div class="srow"><button class="bookbtn" data-sd="'+i+'" aria-label="Details for '+esc(d.title)+'">'+(fb.cover?'<img class="cover" src="'+fb.cover+'" alt="" loading="lazy" decoding="async">':fake(fb))+'</button><div class="info"><button class="open" data-sd="'+i+'">'+esc(d.title)+'</button><div class="by">'+esc(fb.author||"Unknown author")+(d.first_publish_year?" · "+d.first_publish_year:"")+'</div>'+rateHTML(d)+
+    '<div class="sbtns"><button class="sbtn'+(have?' done':'')+'" data-tbr="'+i+'">'+(have?'✓ On your shelf':'+ To read')+'</button><a class="sbtn amz" href="'+amazonUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">Amazon ↗</a></div></div></div>'}).join("")
+    :'<div class="empty-state">No books found. Try another title or author.</div>';
+}
+function loadStore(kind,v){
+  var my=++storeSeq;$("storeList").innerHTML='<div class="empty-state">Finding books…</div>';
+  storeFetch(kind,v).then(function(d){
+    if(my!==storeSeq)return;
+    if(!d.length&&kind==="chip"&&v!=="trending")return getJSON("https://openlibrary.org/search.json?q="+encodeURIComponent(v.replace(/_/g," "))+"&limit=24&fields="+SF).then(function(j){if(my===storeSeq)drawStore(j.docs||[])});
+    drawStore(d);
+  }).catch(function(){if(my===storeSeq)$("storeList").innerHTML='<div class="empty-state">Couldn\'t reach the book store. Check your connection and try again.</div>'});
+}
+function openStoreBook(d){
+  var a=docAuthor(d), fb={id:"sd",title:d.title,author:a,genre:guessGenre(d.subject),cover:d.cover_i?coverUrl(d.cover_i,"L"):""};
+  openSheet('<h2>'+esc(d.title)+'</h2><div class="detail">'+(fb.cover?'<img class="cover" src="'+fb.cover+'" alt="Cover of '+esc(d.title)+'">':fake(fb))+
+    '<div style="min-width:0"><div class="title">'+esc(d.title)+'</div><div class="author">'+esc(a||"Unknown author")+'</div><div class="note" style="margin:6px 0">'+[d.first_publish_year,d.number_of_pages_median?d.number_of_pages_median+" pages":""].filter(Boolean).join(" · ")+'</div>'+rateHTML(d)+'</div></div>'+
+    '<div class="actions" style="margin:0 0 6px"><button class="btn ghost" id="dTbr" type="button">'+(inShelf(d)?'✓ On your shelf':'+ Add to To read')+'</button><a class="btn primary" style="text-align:center;text-decoration:none;background:#FFD814;color:#111" href="'+amazonUrl(d.title,a)+'" target="_blank" rel="noopener sponsored">Price &amp; reviews on Amazon ↗</a></div>'+
+    '<h3 class="sec">About this book</h3><p class="desc" id="dDesc">Loading…</p>'+
+    ((d.subject||[]).length?'<div class="subj">'+d.subject.slice(0,8).map(function(x){return '<span>'+esc(x)+'</span>'}).join("")+'</div>':'')+
+    '<p class="note">Book details from Open Library'+(AMAZON_TAG?'. As an Amazon Associate I earn from qualifying purchases.':'.')+'</p>');
+  $("dTbr").onclick=function(){if(addToTBR(d)){this.textContent="✓ On your shelf";drawStore(storeDocs)}};
+  if(d.key)getJSON("https://openlibrary.org"+d.key+".json").then(function(w){var t=w.description;t=t&&(t.value||t);$("dDesc")&&($("dDesc").textContent=t?String(t).replace(/\(\[source\][^)]*\)/g,"").replace(/\[[^\]]*\]\([^)]*\)/g,"").trim():"No description yet.")}).catch(function(){$("dDesc")&&($("dDesc").textContent="No description yet.")});
+  else $("dDesc").textContent="No description yet.";
+}
+$("storeChips").onclick=function(e){var c=e.target.getAttribute("data-chip");if(!c)return;storeChip=c;$("storeSearch").value="";renderStore();loadStore("chip",c)};
+$("storeSearch").oninput=function(){clearTimeout(storeTimer);var v=this.value.trim();renderStore();storeTimer=setTimeout(function(){if(v.length>=2)loadStore("q",v);else if(!v)loadStore("chip",storeChip)},450)};
+$("storeList").onclick=function(e){
+  var t=e.target.closest("[data-tbr],[data-sd]");if(!t)return;
+  if(t.hasAttribute("data-tbr")){var d=storeDocs[+t.getAttribute("data-tbr")];if(addToTBR(d))drawStore(storeDocs);return}
+  openStoreBook(storeDocs[+t.getAttribute("data-sd")]);
+};
+var storeLoaded=false;
 
 /* ---------- add to home screen ---------- */
 var UA=navigator.userAgent||"";
