@@ -409,7 +409,7 @@ $("settingsBtn").onclick=openSettings;
 var rz;addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,200)});
 
 /* ---------- license ---------- */
-var CHECK_URL="";   // Cloudflare Worker address, e.g. https://bookshelf-key.NAME.workers.dev
+var CHECK_URL="https://bookshelf-key.z6cbt9mnkg.workers.dev";   // Cloudflare Worker address, e.g. https://bookshelf-key.NAME.workers.dev
 var BUY_URL="";     // Payhip product page
 var LKEY="bookshelf-license-v1", RECHECK_DAYS=7;
 var REASONS={not_found:"That key wasn't found. Check it against your Payhip receipt.",disabled:"This key has been turned off (for example after a refund).",too_many:"This key has been used on too many devices. Contact the seller to reset it.",bad_format:"That doesn't look like a license key. Copy it from your receipt.",server_not_set_up:"Unlocking isn't set up yet. Please try again later."};
