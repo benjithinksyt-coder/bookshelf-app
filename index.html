@@ -212,6 +212,7 @@ nav.tabs svg{width:24px;height:24px}
     <input id="lockKey" placeholder="Paste your key" aria-label="License key" autocapitalize="characters" spellcheck="false">
     <div class="lockmsg" id="lockMsg" aria-live="polite"></div>
     <button class="btn primary" id="lockBtn" type="submit">Unlock</button>
+    <button class="btn ghost" id="peekBtn" type="button" style="width:100%;margin-top:10px">Look around first</button>
     <p style="margin:14px 0 0" id="buyLine"></p>
   </form>
 </div>
@@ -338,6 +339,7 @@ $("scrim").addEventListener("click",function(e){if(e.target.id==="scrim")closeSh
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("scrim").hidden)closeSheet()});
 
 function openEditor(id){
+  if(isLocked()){showLock("Unlock to add and edit your own books.");return}
   var b=id?JSON.parse(JSON.stringify(state.books.find(function(x){return x.id===id}))):{id:uid(),title:"",author:"",genre:"",format:"Print",pages:"",status:"Reading",start:new Date().toISOString().slice(0,10),end:"",rating:0,notes:"",cover:""};
   var isNew=!id;
   openSheet(
@@ -384,6 +386,7 @@ function openEditor(id){
 
 /* ---------- settings ---------- */
 function openSettings(){
+  if(isLocked()){showLock("Unlock to set your goal and start your own shelf.");return}
   openSheet('<h2 id="sheetTitle">Settings</h2>'+
     '<div class="two"><div class="field"><label for="sYear">Year</label><input id="sYear" inputmode="numeric" value="'+state.year+'"></div><div class="field"><label for="sGoal">Reading goal</label><input id="sGoal" inputmode="numeric" value="'+state.goal+'"></div></div>'+
     '<div class="field"><label>Back up your books</label><p class="note" style="margin:0 0 8px">Your books are saved on this phone, in this browser. Download a backup now and then, and use it to move your shelf to a new phone.</p><div class="actions" style="margin:0"><button type="button" class="btn ghost" id="expBtn">Download backup</button><label class="btn ghost" style="text-align:center" for="impFile">Restore backup</label><input type="file" id="impFile" accept="application/json,.json" hidden></div></div>'+
@@ -416,11 +419,13 @@ var REASONS={not_found:"That key wasn't found. Check it against your Payhip rece
 function getLic(){try{return JSON.parse(localStorage.getItem(LKEY))}catch(e){return null}}
 function setLic(v){try{if(v)localStorage.setItem(LKEY,JSON.stringify(v));else localStorage.removeItem(LKEY)}catch(e){}}
 function callKey(path,key){return fetch(CHECK_URL.replace(/\/$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:key})}).then(function(r){return r.json()})}
-function showLock(){
+function isLocked(){var l=getLic();return !!CHECK_URL&&!(l&&l.key)}
+function showLock(msg){
   $("lock").hidden=false;
+  $("lockMsg").textContent=msg||"";
   $("buyLine").innerHTML=BUY_URL?'No key yet? <a href="'+esc(BUY_URL)+'" target="_blank" rel="noopener">Get My Reading Year</a>':'';
-  setTimeout(function(){$("lockKey").focus()},200);
 }
+$("peekBtn").onclick=function(){$("lock").hidden=true;toast("Preview mode: tap around the example shelf")};
 $("lockForm").addEventListener("submit",function(e){
   e.preventDefault();var key=$("lockKey").value.trim().toUpperCase();
   if(!key){$("lockMsg").textContent="Paste your license key first.";return}
