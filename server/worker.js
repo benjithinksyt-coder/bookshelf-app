@@ -66,6 +66,7 @@ async function ensureSchema(db) {
     "CREATE TABLE IF NOT EXISTS follows (follower INTEGER NOT NULL, followee INTEGER NOT NULL, accepted INTEGER DEFAULT 1, created INTEGER, PRIMARY KEY (follower, followee))",
     "CREATE INDEX IF NOT EXISTS follows_followee ON follows (followee)",
     "CREATE TABLE IF NOT EXISTS blocks (blocker INTEGER NOT NULL, blocked INTEGER NOT NULL, PRIMARY KEY (blocker, blocked))",
+    "CREATE TABLE IF NOT EXISTS stats (user_id INTEGER PRIMARY KEY, level INTEGER DEFAULT 1, xp INTEGER DEFAULT 0, minutes INTEGER DEFAULT 0, streak INTEGER DEFAULT 0, badges TEXT DEFAULT '', frame TEXT DEFAULT '', updated INTEGER)",
     "CREATE TABLE IF NOT EXISTS reports (reporter INTEGER NOT NULL, kind TEXT NOT NULL, target INTEGER NOT NULL, reason TEXT, created INTEGER, PRIMARY KEY (reporter, kind, target))",
   ];
   await db.batch(s.map(q => db.prepare(q)));
@@ -233,6 +234,16 @@ async function route(req, env, origin) {
     return json({ ok: true, count: upsert.length, removed: remove.length }, origin);
   }
 
+  // ---- reading rewards shown on your profile (level, time read, badges, frame) ----
+  if (seg[1] === "stats" && m === "PATCH") {
+    const badges = (Array.isArray(body.badges) ? body.badges : []).map(b => clean(b, 20)).filter(b => /^[a-z0-9_]+$/.test(b)).slice(0, 60).join(",");
+    const frame = ["", "gold", "rose", "laurel", "star"].includes(body.frame) ? body.frame : "";
+    const n = (v, max) => Math.max(0, Math.min(max, parseInt(v, 10) || 0));
+    await db.prepare("INSERT OR REPLACE INTO stats (user_id, level, xp, minutes, streak, badges, frame, updated) VALUES (?,?,?,?,?,?,?,?)")
+      .bind(me.id, Math.max(1, n(body.level, 999)), n(body.xp, 1e9), n(body.minutes, 1e7), n(body.streak, 10000), badges, frame, now()).run();
+    return json({ ok: true }, origin);
+  }
+
   // ---- feed ----
   if (seg[1] === "feed" && m === "GET") {
     const before = parseInt(url.searchParams.get("before"), 10) || 9e15;
@@ -326,7 +337,9 @@ async function route(req, env, origin) {
       (SELECT COUNT(*) FROM books WHERE user_id=? AND status='Finished') AS finished,
       (SELECT COUNT(*) FROM posts WHERE user_id=? AND hidden=0) AS posts`).bind(target.id, target.id, target.id, target.id).first();
     const visible = await canSee(db, me, target);
-    const out = { ok: true, user: publicUser(target), me: target.id === me.id, follow: f ? (f.accepted ? "following" : "requested") : "none", counts, visible };
+    const st = await db.prepare("SELECT level, minutes, streak, badges, frame FROM stats WHERE user_id=?").bind(target.id).first();
+    const stats = st ? { level: st.level, minutes: st.minutes, streak: st.streak, badges: st.badges ? st.badges.split(",") : [], frame: st.frame || "" } : null;
+    const out = { ok: true, stats, user: { ...publicUser(target), frame: stats ? stats.frame : "" }, me: target.id === me.id, follow: f ? (f.accepted ? "following" : "requested") : "none", counts, visible };
     if (visible) {
       out.books = (await db.prepare("SELECT bid AS id, title, author, cover, status, rating, genre, pages, endd AS end FROM books WHERE user_id=? ORDER BY (status='Reading') DESC, endd DESC, title LIMIT 500").bind(target.id).all()).results;
       out.posts = (await db.prepare(`SELECT ${POST_COLS} FROM posts p JOIN users u ON u.id=p.user_id WHERE p.user_id=? AND p.hidden=0 ORDER BY p.id DESC LIMIT 30`).bind(me.id, target.id).all()).results.map(shapePost);

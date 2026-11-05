@@ -66,8 +66,8 @@ h3.sec span{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weig
 .spine.art{background-size:100% 100%,auto 230%;background-position:center,center 45%;background-repeat:no-repeat}
 .spine.art span{text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 8px rgba(0,0,0,.6)}
 .spine.art::before,.spine.art::after{background:rgba(255,255,255,.55)}
-.spine.reading{transform:translateY(-6px);box-shadow:inset -3px 0 0 rgba(0,0,0,.12),0 6px 0 -2px var(--gold)}
-.spine .ribbon{position:absolute;top:-4px;left:50%;width:9px;height:26px;margin-left:-4.5px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);z-index:2}
+.spine.reading{transform:translateY(-6px);box-shadow:inset -3px 0 0 rgba(0,0,0,.12),0 6px 0 -2px var(--ribbon,var(--gold))}
+.spine .ribbon{position:absolute;top:-4px;left:50%;width:9px;height:26px;margin-left:-4.5px;background:var(--ribbon,var(--gold));clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);z-index:2}
 .spine.empty{background:var(--slot);box-shadow:none;border:1.5px dashed var(--line)}
 .spine.empty::before,.spine.empty::after{display:none}
 .legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.78rem;color:var(--muted);margin-top:10px}
@@ -216,6 +216,67 @@ nav.tabs button{position:relative}
 .av .ic{color:#fff;vertical-align:0}
 .pick button{color:var(--ink)}
 .jic{width:58px;height:58px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:var(--slot);color:var(--ink)}
+/* rewards */
+header.top{gap:8px}.brand{flex:1;min-width:0}
+.wallet{position:relative;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 10px 5px 5px;font-weight:800;font-size:.85rem;color:var(--ink)}
+.wallet .lv{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:var(--btn);color:#fff;font-size:.8rem;padding:0 4px}
+.wc{display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.coin,.gem{display:inline-block;width:14px;height:14px;flex:0 0 auto}
+.coin{border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE9A3,#E2A82B 55%,#B07A12);box-shadow:inset 0 0 0 1.5px #9A6A0E}
+.gem{background:linear-gradient(135deg,#BFF3FF,#4FB6E8 50%,#2A7FC4);clip-path:polygon(50% 0,100% 38%,50% 100%,0 38%)}
+.wdot{position:absolute;top:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:#D2395A;border:2px solid var(--paper)}
+.sesscard{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-top:14px;border-radius:18px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);width:100%;text-align:left;color:var(--ink)}
+.sesscard .play{width:48px;height:48px;border-radius:50%;background:var(--btn);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+.sesscard b{font-family:var(--display);font-size:1.1rem;display:block}.sesscard span{font-size:.84rem;color:var(--muted)}
+.sesscard .streak{margin-left:auto;display:flex;flex-direction:column;align-items:center;font-weight:800;font-size:.8rem;color:#D9692B}
+.timerwrap{text-align:center;padding:10px 0 6px}
+.timerwrap .cover,.timerwrap .fakecover{width:120px;margin:0 auto 16px}
+.bigtime{font-family:var(--display);font-weight:700;font-size:4rem;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.tstate{margin-top:8px;font-weight:700;color:var(--muted)}
+.tstate.on{color:var(--sage)}
+.earn{display:flex;justify-content:center;gap:16px;margin:14px 0 4px;font-weight:800}
+.earn span{display:flex;align-items:center;gap:5px}
+.bookpick{display:flex;gap:10px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.bookpick button{flex:0 0 74px;border:2px solid transparent;border-radius:10px;padding:3px;background:none}
+.bookpick button[aria-pressed="true"]{border-color:var(--btn)}
+.bookpick .cover,.bookpick .fakecover{width:100%}
+.lvcard{display:flex;align-items:center;gap:14px}
+.lvbig{width:64px;height:64px;border-radius:50%;background:var(--btn);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.6rem;flex:0 0 auto}
+.xpbar{height:10px;border-radius:999px;background:var(--slot);overflow:hidden;margin-top:8px}.xpbar b{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#E8B84A);border-radius:999px}
+.walletrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.walletrow div{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;font-weight:800;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.walletrow .coin,.walletrow .gem{width:22px;height:22px}
+.walletrow small{display:block;font-size:.72rem;color:var(--muted);font-weight:700}
+.checkin{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0 10px}
+.checkin div{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 2px;text-align:center;font-size:.7rem;font-weight:800;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px}
+.checkin div.done{background:var(--sage-soft);color:var(--sage)}.checkin div.today{border-color:var(--btn);color:var(--ink)}
+.achgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px}
+.ach{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px}
+.ach .medal{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--slot);color:var(--muted)}
+.ach.got .medal{background:linear-gradient(135deg,#F3D57A,#C9962B);color:#fff}
+.ach b{font-size:.78rem;line-height:1.15}.ach span{font-size:.68rem;color:var(--muted);line-height:1.2}
+.ach .rw{display:flex;align-items:center;gap:3px;font-size:.7rem;font-weight:800;color:var(--ink)}
+.ach:not(.got){opacity:.75}
+.shopgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.item{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.item .sw2{height:56px;border-radius:10px;position:relative;overflow:hidden}
+.item b{font-size:.9rem}
+.item .buy{border:0;border-radius:999px;padding:8px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;background:var(--btn);color:#fff}
+.item .buy.own{background:var(--slot);color:var(--ink)}.item .buy.eq{background:var(--btn-sage)}
+.item .buy:disabled{opacity:.5}
+.badgerow{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:10px 0 0}
+.badgerow span{display:flex;align-items:center;gap:4px;font-size:.72rem;font-weight:800;background:var(--slot);border-radius:999px;padding:4px 9px}
+.lvchip{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:.8rem;font-weight:800;background:var(--slot);border-radius:999px;padding:4px 10px}
+.av.fr-gold{box-shadow:0 0 0 3px var(--paper),0 0 0 6px #D4A32F}
+.av.fr-rose{box-shadow:0 0 0 3px var(--paper),0 0 0 6px #D46A8A}
+.av.fr-laurel{box-shadow:0 0 0 3px var(--paper),0 0 0 5px #5E7A5A,0 0 0 8px var(--paper),0 0 0 10px #5E7A5A}
+.av.fr-star{box-shadow:0 0 0 3px var(--paper),0 0 0 6px #7FB8E8,0 0 18px 4px rgba(127,184,232,.6)}
+.pop{position:fixed;inset:0;z-index:95;background:rgba(20,16,12,.5);display:flex;align-items:center;justify-content:center;padding:20px}
+.popcard{background:var(--paper);border-radius:22px;padding:24px 20px;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.popcard h3{font-family:var(--display);font-size:1.5rem;margin:6px 0}
+.popcard .earn{font-size:1.1rem}
+.popcard .unlocked{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.popcard .unlocked div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;font-weight:700;font-size:.88rem}
 /* store */
 .srow{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px}
 .srow .cover,.srow .fakecover{width:64px}
@@ -260,6 +321,7 @@ nav.tabs button{position:relative}
 <div class="app"><div class="scroller" id="scroller"><div class="wrap">
   <header class="top">
     <div class="brand"><small id="yearLabel">2026</small>The Book Club</div>
+    <button class="wallet" id="walletBtn" type="button" aria-label="Rewards, coins and shop"><span class="lv" id="wLevel">1</span><span class="wc"><i class="coin"></i><b id="wGold">0</b></span><span class="wc"><i class="gem"></i><b id="wGems">0</b></span><b class="wdot" id="wDot" hidden></b></button>
     <button class="iconbtn" id="settingsBtn" aria-label="Settings">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
@@ -278,6 +340,7 @@ nav.tabs button{position:relative}
         <div class="chips" id="goalChips"></div>
       </div>
     </section>
+    <div id="sessionCard"></div>
     <h3 class="sec">Currently reading <span id="nowCount"></span></h3>
     <div id="nowList"></div>
     <h3 class="sec">My bookshelf <span>tap a spine</span></h3>
@@ -451,7 +514,7 @@ function render(){
   $("shelf").innerHTML=html;
   var used={};fin.forEach(function(b){used[b.genre]=(used[b.genre]||0)+1});
   $("legend").innerHTML=Object.keys(used).map(function(g){return '<span><i style="background:'+gcolor(g)+'"></i>'+esc(g)+'</span>'}).join("")+(onShelf.length>fin.length?'<span><i style="background:var(--gold)"></i>Reading now</span>':'');
-  renderLibrary(); renderStats(); bindOpen();
+  renderLibrary(); renderStats(); bindOpen(); drawSessionCard();
 }
 function avg(list){var r=list.filter(function(b){return b.rating});return r.length?r.reduce(function(s,b){return s+ +b.rating},0)/r.length:0}
 function renderLibrary(){
@@ -516,6 +579,7 @@ function openEditor(id){
     var share=$("fShare")&&$("fShare").checked, cap=$("fCaption")?$("fCaption").value:"";
     save();closeSheet();render();toast(isNew?"Added to your shelf":"Saved");
     if(share)shareBook(nb,cap);
+    rewardBookFinished(nb,b.status);
     if(isNew&&nb.status==="Finished")setTab("shelf");
   };
   if(isNew){
@@ -548,8 +612,8 @@ function openSettings(){
   $("sTheme").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;setTheme(v);[].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",c.getAttribute("data-v")===v)})};
   $("homeBtn").onclick=function(){showInstall()};
   $("sSave").onclick=function(){state.year=parseInt($("sYear").value,10)||thisYear;state.goal=Math.max(1,parseInt($("sGoal").value,10)||24);save();closeSheet();render()};
-  $("expBtn").onclick=function(){var blob=new Blob([JSON.stringify(state,null,1)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-bookshelf-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);toast("Backup downloaded")};
-  $("impFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.books)throw 0;state=s;save();closeSheet();render();toast("Shelf restored")}catch(e){toast("That file isn't a bookshelf backup")}};r.readAsText(f)};
+  $("expBtn").onclick=function(){var blob=new Blob([JSON.stringify(Object.assign({},state,{rewards:R}),null,1)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-bookshelf-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);toast("Backup downloaded")};
+  $("impFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.books)throw 0;if(s.rewards){R=Object.assign(rDefault(),s.rewards);R.active=null;delete s.rewards;rSave();applyCosmetics()}state=s;save();closeSheet();render();toast("Shelf restored")}catch(e){toast("That file isn't a bookshelf backup")}};r.readAsText(f)};
   var armed=false;$("clrAll").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to clear";return}state.books=[];save();closeSheet();render();toast("Shelf cleared")};
 }
 
@@ -717,7 +781,17 @@ var ICONS={
   chat:'<path d="M4 5h16v11H9l-5 4z"/>',
   heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
   lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-  user:'<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>'
+  user:'<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>',
+  play:'<path d="M8 5.5v13l10-6.5z"/>',
+  pause:'<path d="M8 5v14M16 5v14"/>',
+  stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
+  flame:'<path d="M12 21c-4 0-6.5-2.8-6.5-6.3 0-3.6 3-5.6 3.8-9.2 2.3 1.5 3.4 3.5 3.2 5.6 1-.6 1.7-1.7 1.9-3 2 1.8 4.1 4.1 4.1 6.6 0 3.5-2.5 6.3-6.5 6.3z"/>',
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M8.5 20h7M10 17h4v3h-4z"/>',
+  gift:'<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18M12 9v11"/><path d="M12 9c-1.5-3.5-5-4-5-1.5S10 9 12 9zM12 9c1.5-3.5 5-4 5-1.5S14 9 12 9z"/>',
+  bag:'<path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+  clock:'<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  snow:'<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5 12 6l2.5-1.5M9.5 19.5 12 18l2.5 1.5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>'
 };
 function icon(name,size,fill){return '<svg width="'+(size||20)+'" height="'+(size||20)+'" viewBox="0 0 24 24" fill="'+(fill?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ic">'+(ICONS[name]||ICONS.book)+'</svg>'}
 var AVATARS=["book","open","cup","moon","flower","leaf","candle","cat","owl","glasses","pen","star"];
@@ -732,7 +806,7 @@ function api(method,path,body){
 }
 var SOCIAL_ERR={username_taken:"That username is taken. Try another.",bad_username:"Usernames are 3–20 letters, numbers, dots or underscores.",need_agree:"Please tick the box to agree.",slow_down:"You're posting a lot. Try again in a little while.",try_again:"Couldn't reach the server. Try again in a minute.",database_not_connected:"The community isn't switched on yet.",not_found:"Not found.",disabled:"This key has been turned off."};
 function errMsg(j){return SOCIAL_ERR[j&&j.reason]||"Something went wrong. Try again."}
-function avatarHTML(u,cls){var k=LEGACY_AV[u.avatar]||u.avatar,inner=ICONS[k]?icon(k,cls==="big"?42:cls==="sm"?16:21):esc((u.name||u.username||"?").charAt(0).toUpperCase());return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+'">'+inner+'</span>'}
+function avatarHTML(u,cls){var k=LEGACY_AV[u.avatar]||u.avatar,inner=ICONS[k]?icon(k,cls==="big"?42:cls==="sm"?16:21):esc((u.name||u.username||"?").charAt(0).toUpperCase());return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+(u.frame?' fr-'+esc(u.frame):'')+'">'+inner+'</span>'}
 function ago(ts){var s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return s+"s";var m=Math.round(s/60);if(m<60)return m+"m";var h=Math.round(m/60);if(h<24)return h+"h";var d=Math.round(h/24);if(d<7)return d+"d";return new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
 function quietSignIn(){var l=getLic();if(!l||!l.key||session())return;api("POST","/signup",{key:l.key}).then(function(j){if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true)}}).catch(function(){})}
 /* sync only what changed: remember a fingerprint of each book we last sent */
@@ -757,7 +831,7 @@ window.__scheduleSync=function(){scheduleSync(false)};
 function shareBook(b,caption){
   var kind={Finished:"finished",Reading:"started",TBR:"tbr",DNF:"review"}[b.status]||"review";
   api("POST","/posts",{kind:kind,title:b.title,author:b.author,cover:b.cover,rating:b.status==="Finished"?b.rating:0,body:caption}).then(function(j){
-    if(j.ok){toast("Shared to your feed");feedPosts=[];if(tab==="feed")openFeed()}else toast(errMsg(j))})
+    if(j.ok){toast("Shared to your feed");feedPosts=[];if(tab==="feed")openFeed();if(!R.posted){R.posted=1;var bg=checkAchievements(newBag());rSave();if(bg.unlocked.length)showReward("Achievement unlocked",bg)}}else toast(errMsg(j))})
 }
 function kindText(k){return {finished:"finished",started:"started reading",tbr:"wants to read",review:"is talking about"}[k]||"shared"}
 function postHTML(p){
@@ -854,7 +928,8 @@ function openProfile(username){
     var u=j.user,c=j.counts;window.__profPosts=j.posts||[];
     var btn=j.me?'<button class="btn ghost" id="pEdit" type="button">Edit profile'+(meCache&&meCache.requests?' · '+meCache.requests+' request'+(meCache.requests>1?'s':''):'')+'</button>'
       :'<button class="btn '+(j.follow==="none"?'primary':'ghost')+'" id="pFollow" type="button">'+(j.follow==="following"?"Following ✓":j.follow==="requested"?"Requested":"Follow")+'</button>';
-    var h='<div class="prof">'+avatarHTML(u,"big")+'<h3>'+esc(u.name)+'</h3><div class="handle">@'+esc(u.username)+(u.private?' · '+icon("lock",14)+' Private':'')+'</div>'+(u.bio?'<p class="bio">'+esc(u.bio)+'</p>':'')+
+    var h='<div class="prof">'+avatarHTML(u,"big")+'<h3>'+esc(u.name)+'</h3><div class="handle">@'+esc(u.username)+(u.private?' · '+icon("lock",14)+' Private':'')+'</div>'+(j.stats?'<div class="lvchip">'+icon("star",14)+' Level '+j.stats.level+' · '+(j.stats.minutes>=60?Math.floor(j.stats.minutes/60)+'h':j.stats.minutes+'m')+' read'+(j.stats.streak>1?' · '+icon("flame",14)+j.stats.streak:'')+'</div>':'')+(u.bio?'<p class="bio">'+esc(u.bio)+'</p>':'')+
+      (j.stats&&j.stats.badges.length?'<div class="badgerow">'+j.stats.badges.slice(0,6).map(function(id){var a=ACH.find(function(x){return x[0]===id});return a?'<span>'+icon("trophy",13)+esc(a[1])+'</span>':''}).join("")+(j.stats.badges.length>6?'<span>+'+(j.stats.badges.length-6)+'</span>':'')+'</div>':'')+
       '<div class="counts"><div><b>'+c.finished+'</b>Books read</div><div><b>'+c.followers+'</b>Followers</div><div><b>'+c.following+'</b>Following</div></div>'+
       '<div class="actions" style="margin:0 0 16px">'+btn+(j.me?'':'<button class="btn ghost" id="pMore" type="button" style="flex:0 0 56px" aria-label="More">⋯</button>')+'</div></div>';
     if(!j.visible)h+='<div class="card join"><div class="jic">'+icon("lock",28)+'</div><h3>This shelf is private</h3><p>Follow @'+esc(u.username)+' to see their books and posts.</p></div>';
@@ -923,6 +998,248 @@ function openEditProfile(){
   var armed=false;$("epDel").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to delete";return}api("DELETE","/account").then(function(j){if(j.ok){setSession("");setSynced(null);meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Account deleted")}else toast(errMsg(j))})};
 }
 
+/* ---------- rewards: reading sessions, XP, gold, diamonds, achievements, shop ---------- */
+var RKEY="bookshelf-rewards-v1", DAILY_CAP_MIN=180, CHECK_EVERY_MIN=30;
+function rDefault(){return {xp:0,gold:0,gems:0,totalMin:0,sessions:0,day:{},streak:{last:"",count:0,best:0},checkin:{last:"",day:0},ach:{},owned:["wood-oak","accent-classic","ribbon-gold","frame-none"],eq:{wood:"wood-oak",accent:"accent-classic",ribbon:"ribbon-gold",frame:"frame-none"},freezes:0,bookRewards:{},active:null}}
+var R=(function(){try{var o=JSON.parse(localStorage.getItem(RKEY));if(o&&typeof o.xp==="number"){var d=rDefault();for(var k in d)if(!(k in o))o[k]=d[k];return o}}catch(e){}return rDefault()})();
+function rSave(){try{localStorage.setItem(RKEY,JSON.stringify(R))}catch(e){}drawWallet();scheduleStats()}
+function today(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dayDiff(a,b){return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5)}
+function levelOf(xp){return Math.floor((1+Math.sqrt(1+0.08*xp))/2)}
+function xpFor(l){return 50*l*(l-1)}
+function coinHTML(n){return '<span class="wc"><i class="coin"></i>'+n+'</span>'}
+function gemHTML(n){return '<span class="wc"><i class="gem"></i>'+n+'</span>'}
+function priceHTML(it){return it.cur==="gems"?gemHTML(it.price):coinHTML(it.price)}
+function fmtTime(ms){var t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),x=t%60;return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")}
+function drawWallet(){if(!$("wGold"))return;$("wGold").textContent=R.gold.toLocaleString();$("wGems").textContent=R.gems;$("wLevel").textContent=levelOf(R.xp);$("wDot").hidden=R.checkin.last===today()}
+
+/* award helper: collects everything earned in one moment so we can show it together */
+function grant(bag,xp,gold,gems,why){bag.xp+=xp||0;bag.gold+=gold||0;bag.gems+=gems||0;if(why)bag.notes.push(why)}
+function newBag(){return {xp:0,gold:0,gems:0,notes:[],unlocked:[],levelUp:0}}
+function applyBag(bag){
+  var before=levelOf(R.xp);R.xp+=bag.xp;R.gold+=bag.gold;R.gems+=bag.gems;
+  var after=levelOf(R.xp);
+  for(var l=before+1;l<=after;l++){R.gold+=20*l;bag.gold+=20*l;bag.levelUp=l}
+  checkAchievements(bag);rSave();
+}
+
+/* ---- achievements ---- */
+var ACH=[
+  ["first_session","First page","Finish your first reading session",0,20,0,function(){return R.sessions>=1}],
+  ["min_60","One hour in","Read for 1 hour in total",0,30,0,function(){return R.totalMin>=60}],
+  ["min_600","Bookworm","Read for 10 hours in total",0,0,1,function(){return R.totalMin>=600}],
+  ["min_3000","Devoted reader","Read for 50 hours in total",0,0,3,function(){return R.totalMin>=3000}],
+  ["marathon","Marathon","Read 60 minutes in one session",0,0,1,function(b){return (b.sessionMin||0)>=60}],
+  ["streak3","On a roll","Read 3 days in a row",0,30,0,function(){return R.streak.count>=3}],
+  ["streak7","Week of words","Read 7 days in a row",0,0,1,function(){return R.streak.count>=7}],
+  ["streak30","Unstoppable","Read 30 days in a row",0,0,5,function(){return R.streak.count>=30}],
+  ["night_owl","Night owl","Finish a session after 10 pm",0,25,0,function(b){var h=new Date().getHours();return b.sessionMin>0&&(h>=22||h<4)}],
+  ["early_bird","Early bird","Read between 5 and 8 am",0,25,0,function(b){var h=new Date().getHours();return b.sessionMin>0&&h>=5&&h<8}],
+  ["book1","The end","Finish your first book",0,25,0,function(){return finCount()>=1}],
+  ["book5","Shelf starter","Finish 5 books",0,50,0,function(){return finCount()>=5}],
+  ["book12","A book a month","Finish 12 books",0,0,2,function(){return finCount()>=12}],
+  ["book25","Library legend","Finish 25 books",0,0,4,function(){return finCount()>=25}],
+  ["goal","Goal getter","Reach your yearly reading goal",0,0,5,function(){return finishedThisYear().length>=Math.max(1,+state.goal||1)}],
+  ["genres5","Genre explorer","Finish books in 5 different genres",0,0,1,function(){var g={};state.books.forEach(function(b){if(b.status==="Finished")g[b.genre||"Other"]=1});return Object.keys(g).length>=5}],
+  ["level5","Rising reader","Reach level 5",0,50,0,function(){return levelOf(R.xp)>=5}],
+  ["level10","Seasoned reader","Reach level 10",0,0,2,function(){return levelOf(R.xp)>=10}],
+  ["checkin7","Regular","Complete a 7-day check-in",0,20,0,function(){return R.checkin.day>=7||!!R.ach.checkin7}],
+  ["social","Book clubber","Share your first post to the feed",0,25,0,function(){return !!R.posted}],
+  ["shopper","Treat yourself","Buy your first shop item",0,10,0,function(){return R.owned.length>4}]
+];
+function finCount(){return state.books.filter(function(b){return b.status==="Finished"}).length}
+function checkAchievements(bag){
+  bag=bag||newBag();var got=false;
+  ACH.forEach(function(a){if(R.ach[a[0]])return;if(a[6](bag)){R.ach[a[0]]=today();R.gold+=a[4];R.gems+=a[5];bag.gold+=a[4];bag.gems+=a[5];bag.unlocked.push(a);got=true}});
+  if(got){try{localStorage.setItem(RKEY,JSON.stringify(R))}catch(e){}}
+  return bag;
+}
+
+/* ---- shop ---- */
+var SHOP=[
+  {id:"wood-oak",kind:"wood",name:"Oak shelf",price:0,cur:"gold",v:["#8B6446","#6B4B33"]},
+  {id:"wood-walnut",kind:"wood",name:"Walnut shelf",price:300,cur:"gold",v:["#5C3B24","#3E2716"]},
+  {id:"wood-cherry",kind:"wood",name:"Cherry shelf",price:300,cur:"gold",v:["#9A4A32","#6E3020"]},
+  {id:"wood-birch",kind:"wood",name:"Birch shelf",price:300,cur:"gold",v:["#D9C3A0","#B79E77"]},
+  {id:"wood-ebony",kind:"wood",name:"Ebony shelf",price:6,cur:"gems",v:["#3A302B","#16110E"]},
+  {id:"accent-classic",kind:"accent",name:"Classic burgundy",price:0,cur:"gold",v:["#7A2E3A","#A9404F"]},
+  {id:"accent-forest",kind:"accent",name:"Forest",price:400,cur:"gold",v:["#2F6B4F","#3F8A66"]},
+  {id:"accent-ocean",kind:"accent",name:"Ocean",price:400,cur:"gold",v:["#2F5E86","#3F78AA"]},
+  {id:"accent-lavender",kind:"accent",name:"Lavender",price:400,cur:"gold",v:["#6E5AA8","#8571C2"]},
+  {id:"accent-rose",kind:"accent",name:"Rose",price:400,cur:"gold",v:["#B04A6A","#C45C7C"]},
+  {id:"accent-midnight",kind:"accent",name:"Midnight gold",price:8,cur:"gems",v:["#24304F","#B8902F"]},
+  {id:"ribbon-gold",kind:"ribbon",name:"Gold bookmark",price:0,cur:"gold",v:["#C9962B"]},
+  {id:"ribbon-ruby",kind:"ribbon",name:"Ruby bookmark",price:150,cur:"gold",v:["#B3263E"]},
+  {id:"ribbon-emerald",kind:"ribbon",name:"Emerald bookmark",price:150,cur:"gold",v:["#2E8B57"]},
+  {id:"ribbon-sapphire",kind:"ribbon",name:"Sapphire bookmark",price:150,cur:"gold",v:["#2F5FB3"]},
+  {id:"ribbon-silver",kind:"ribbon",name:"Silver bookmark",price:3,cur:"gems",v:["#AEB7C0"]},
+  {id:"frame-none",kind:"frame",name:"No frame",price:0,cur:"gold",v:[""]},
+  {id:"frame-gold",kind:"frame",name:"Gold ring",price:500,cur:"gold",v:["gold"]},
+  {id:"frame-rose",kind:"frame",name:"Rose ring",price:500,cur:"gold",v:["rose"]},
+  {id:"frame-laurel",kind:"frame",name:"Laurel ring",price:10,cur:"gems",v:["laurel"]},
+  {id:"frame-star",kind:"frame",name:"Starlight glow",price:15,cur:"gems",v:["star"]},
+  {id:"freeze",kind:"boost",name:"Streak freeze",price:2,cur:"gems",v:[],desc:"Saves your streak if you miss a day (hold up to 3)"}
+];
+function shopItem(id){for(var i=0;i<SHOP.length;i++)if(SHOP[i].id===id)return SHOP[i]}
+function applyCosmetics(){
+  var r=document.documentElement.style,w=shopItem(R.eq.wood)||SHOP[0],a=shopItem(R.eq.accent)||SHOP[5],rb=shopItem(R.eq.ribbon)||SHOP[11];
+  r.setProperty("--wood",w.v[0]);r.setProperty("--wood-dark",w.v[1]);r.setProperty("--ribbon",rb.v[0]);
+  var dark=document.documentElement.getAttribute("data-theme")==="dark"||(document.documentElement.getAttribute("data-theme")!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
+  if(a.id==="accent-classic"){r.removeProperty("--btn");r.removeProperty("--burgundy")}else{r.setProperty("--btn",a.v[dark?1:0]);r.setProperty("--burgundy",a.v[dark?1:0])}
+}
+function myFrame(){var f=shopItem(R.eq.frame);return f&&f.v[0]||""}
+function buy(it){
+  if(it.kind==="boost"){if(R.freezes>=3){toast("You can hold up to 3 streak freezes");return}}
+  else if(R.owned.indexOf(it.id)>-1){R.eq[it.kind]=it.id;rSave();applyCosmetics();toast("Equipped "+it.name);return true}
+  var have=it.cur==="gems"?R.gems:R.gold;if(have<it.price){toast("You need "+(it.price-have)+" more "+(it.cur==="gems"?"diamonds":"gold"));return}
+  if(it.cur==="gems")R.gems-=it.price;else R.gold-=it.price;
+  if(it.kind==="boost")R.freezes++;else{R.owned.push(it.id);R.eq[it.kind]=it.id}
+  var bag=checkAchievements(newBag());rSave();applyCosmetics();toast("Got "+it.name+(bag.unlocked.length?" · achievement unlocked!":""));return true;
+}
+
+/* ---- daily check-in (7-day cycle, diamond on day 7) ---- */
+var CHECKIN=[[10,0],[10,0],[15,0],[15,0],[20,0],[25,0],[30,1]];
+function checkinState(){var t=today(),c=R.checkin;if(c.last===t)return {claimed:true,day:c.day};var next=(c.last&&dayDiff(c.last,t)===1&&c.day<7)?c.day+1:1;return {claimed:false,day:next}}
+function claimCheckin(){var st=checkinState();if(st.claimed)return;var rw=CHECKIN[st.day-1];R.checkin={last:today(),day:st.day};var bag=newBag();grant(bag,10,rw[0],rw[1]);applyBag(bag);showReward("Day "+st.day+" check-in",bag)}
+
+/* ---- reading sessions: the timer only runs while the app is open and on screen ---- */
+var sessTick=null;
+function sessElapsed(){var a=R.active;if(!a)return 0;return a.acc+(a.runningSince?Date.now()-a.runningSince:0)}
+function sessRunning(){return !!(R.active&&R.active.runningSince)}
+function startSession(bookId){
+  if(isLocked()){showLock("Unlock to start reading sessions.");return}
+  if(!R.active)R.active={bookId:bookId||"",started:Date.now(),acc:0,runningSince:null,sinceCheck:0};
+  if(bookId)R.active.bookId=bookId;
+  resumeSession();openSessionPage();
+}
+function resumeSession(){if(!R.active||R.active.runningSince||document.visibilityState==="hidden")return;R.active.runningSince=Date.now();rSave();startTicker()}
+function pauseSession(reason){var a=R.active;if(!a||!a.runningSince)return;var d=Date.now()-a.runningSince;a.acc+=d;a.sinceCheck=(a.sinceCheck||0)+d;a.runningSince=null;a.pausedFor=reason||"";rSave();drawSessionPage()}
+function startTicker(){clearInterval(sessTick);sessTick=setInterval(function(){
+  var a=R.active;if(!a){clearInterval(sessTick);return}
+  if(a.runningSince&&(a.sinceCheck||0)+(Date.now()-a.runningSince)>=CHECK_EVERY_MIN*60000){pauseSession("check");a.sinceCheck=0;rSave();askStillReading()}
+  drawSessionPage();drawSessionCard();
+},1000)}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")pauseSession("hidden")});
+addEventListener("pagehide",function(){pauseSession("hidden")});
+function askStillReading(){
+  var d=document.createElement("div");d.className="pop";d.innerHTML='<div class="popcard"><div class="jic">'+icon("clock",28)+'</div><h3>Still reading?</h3><p class="note">The timer pauses every '+CHECK_EVERY_MIN+' minutes so it only counts real reading.</p><div class="actions"><button class="btn ghost" type="button" data-x="end">I\'m done</button><button class="btn primary" type="button" data-x="go">Keep going</button></div></div>';
+  document.body.appendChild(d);d.onclick=function(e){var x=e.target.getAttribute("data-x");if(!x)return;d.remove();if(x==="go")resumeSession();else finishSession()};
+}
+function sessBook(){var a=R.active;if(!a)return null;return state.books.find(function(b){return b.id===a.bookId})||null}
+function drawSessionCard(){
+  var el=$("sessionCard");if(!el)return;
+  var st=R.streak,streakOn=st.count&&(st.last===today()||dayDiff(st.last,today())===1);
+  if(R.active){var b=sessBook();el.innerHTML='<button class="sesscard" id="sessOpen" type="button"><span class="play">'+icon(sessRunning()?"pause":"play",22,true)+'</span><span style="min-width:0"><b>'+fmtTime(sessElapsed())+'</b><span>'+(sessRunning()?"Reading":"Paused")+(b?" · "+esc(b.title):"")+'</span></span>'+(streakOn?'<span class="streak">'+icon("flame",20)+st.count+'</span>':'')+'</button>'}
+  else el.innerHTML='<button class="sesscard" id="sessOpen" type="button"><span class="play">'+icon("play",22,true)+'</span><span style="min-width:0"><b>Start reading</b><span>Earn XP and gold for every minute you read</span></span>'+(streakOn?'<span class="streak">'+icon("flame",20)+st.count+'</span>':'')+'</button>';
+  $("sessOpen").onclick=function(){if(R.active)openSessionPage();else openSessionPicker()};
+}
+function openSessionPicker(){
+  if(isLocked()){showLock("Unlock to start reading sessions.");return}
+  var reading=state.books.filter(function(b){return b.status==="Reading"}),others=state.books.filter(function(b){return b.status==="TBR"}).slice(0,10),list=reading.concat(others),pick=(reading[0]||list[0]||{}).id||"";
+  openSheet('<h2>Start reading</h2><p class="note" style="margin:0 0 10px">Pick what you\'re reading. The timer only runs while The Book Club is open on your screen.</p>'+
+    (list.length?'<div class="bookpick" id="bpick">'+list.map(function(b){return '<button type="button" data-b="'+b.id+'" aria-pressed="'+(b.id===pick)+'">'+coverHTML(b)+'</button>'}).join("")+'</div>':'<p class="note">No books on your Reading or To read list yet. You can still start a session.</p>')+
+    '<div class="earn"><span>'+icon("star",18)+' 10 XP / min</span><span><i class="coin"></i> 1 gold / min</span><span><i class="gem"></i> every hour</span></div>'+
+    '<div class="actions" style="margin-top:14px"><button class="btn primary" id="goRead" type="button">'+icon("play",18,true)+' Start timer</button></div>');
+  if($("bpick"))$("bpick").onclick=function(e){var t=e.target.closest("[data-b]");if(!t)return;pick=t.getAttribute("data-b");[].forEach.call(this.children,function(x){x.setAttribute("aria-pressed",x===t)})};
+  $("goRead").onclick=function(){startSession(pick)};
+}
+function openSessionPage(){
+  var b=sessBook();
+  openSheet('<h2>Reading session</h2><div class="timerwrap">'+(b?coverHTML(b):'')+'<div class="bigtime" id="bigTime">'+fmtTime(sessElapsed())+'</div><div class="tstate" id="tState"></div>'+(b?'<div class="note" style="margin-top:4px">'+esc(b.title)+'</div>':'')+
+    '<div class="earn" id="tEarn"></div></div>'+
+    '<div class="actions"><button class="btn ghost" id="tToggle" type="button"></button><button class="btn primary" id="tFinish" type="button">'+icon("stop",16,true)+' Finish</button></div>'+
+    '<p class="note" style="text-align:center;margin-top:12px">Switching apps or locking your phone pauses the timer. Up to '+(DAILY_CAP_MIN/60)+' hours a day earn rewards.</p>');
+  $("tToggle").onclick=function(){if(sessRunning())pauseSession("you");else resumeSession();drawSessionPage()};
+  $("tFinish").onclick=finishSession;
+  drawSessionPage();if(sessRunning())startTicker();
+}
+function drawSessionPage(){
+  if(!$("bigTime")||!R.active)return;var ms=sessElapsed(),min=Math.floor(ms/60000);
+  $("bigTime").textContent=fmtTime(ms);
+  var run=sessRunning();$("tState").className="tstate"+(run?" on":"");
+  $("tState").textContent=run?"Reading… timer running":(R.active.pausedFor==="hidden"?"Paused while the app was closed":R.active.pausedFor==="check"?"Paused: tap Resume to keep going":"Paused");
+  $("tToggle").innerHTML=run?icon("pause",16)+" Pause":icon("play",16,true)+" Resume";
+  var cr=Math.min(min,Math.max(0,DAILY_CAP_MIN-(R.day[today()]||0)));
+  $("tEarn").innerHTML='<span>+'+cr*10+' XP</span><span><i class="coin"></i> +'+(cr+(min>=15?10:0))+'</span>';
+}
+function finishSession(){
+  var a=R.active;if(!a)return;pauseSession("you");clearInterval(sessTick);
+  var min=Math.floor(a.acc/60000),b=sessBook(),t=today();
+  R.active=null;
+  if(min<1){rSave();closeSheet();drawSessionCard();toast("Sessions under a minute don't earn rewards");return}
+  var bag=newBag();bag.sessionMin=min;
+  var already=R.day[t]||0,credit=Math.min(min,Math.max(0,DAILY_CAP_MIN-already));
+  R.day[t]=already+min;R.totalMin+=min;R.sessions++;
+  grant(bag,credit*10,credit+(min>=15?10:0),Math.min(3,Math.floor((already+credit)/60))-Math.min(3,Math.floor(already/60)));
+  // streak: 10+ minutes in a day keeps it going; a freeze covers one missed day
+  if(already<10&&already+min>=10&&R.streak.last!==t){
+    var gap=R.streak.last?dayDiff(R.streak.last,t):99;
+    if(gap===1)R.streak.count++;else if(gap===2&&R.freezes>0){R.freezes--;R.streak.count++;bag.notes.push("A streak freeze saved your streak")}else R.streak.count=1;
+    R.streak.last=t;R.streak.best=Math.max(R.streak.best||0,R.streak.count);
+    var sb=Math.min(50,5*R.streak.count);bag.gold+=sb;bag.notes.push(R.streak.count+"-day streak bonus");
+  }
+  // prune old day totals
+  Object.keys(R.day).forEach(function(k){if(dayDiff(k,t)>60)delete R.day[k]});
+  applyBag(bag);closeSheet();drawSessionCard();
+  showReward(min+" minute"+(min>1?"s":"")+" read"+(b?" · "+b.title:""),bag,b);
+}
+function rewardBookFinished(nb,prev){
+  if(nb.status!=="Finished"||prev==="Finished"||R.bookRewards[nb.id])return;
+  R.bookRewards[nb.id]=today();var bag=newBag();grant(bag,100,50,0);applyBag(bag);showReward("You finished "+nb.title+"!",bag);
+}
+function showReward(title,bag,book){
+  var d=document.createElement("div");d.className="pop";
+  d.innerHTML='<div class="popcard"><div class="jic" style="background:linear-gradient(135deg,#F3D57A,#C9962B);color:#fff">'+icon(bag.unlocked.length?"trophy":"star",28)+'</div><h3>'+esc(title)+'</h3>'+
+    '<div class="earn">'+(bag.xp?'<span>+'+bag.xp+' XP</span>':'')+(bag.gold?'<span><i class="coin"></i> +'+bag.gold+'</span>':'')+(bag.gems?'<span><i class="gem"></i> +'+bag.gems+'</span>':'')+'</div>'+
+    (bag.levelUp?'<p style="font-weight:800;margin:8px 0 0">Level up! You\'re now level '+bag.levelUp+'</p>':'')+
+    (bag.notes.length?'<p class="note" style="margin:6px 0 0">'+bag.notes.map(esc).join(" · ")+'</p>':'')+
+    (bag.unlocked.length?'<div class="unlocked">'+bag.unlocked.map(function(a){return '<div>'+icon("trophy",16)+' '+esc(a[1])+'</div>'}).join("")+'</div>':'')+
+    (book&&book.pages?'<div class="field" style="margin:12px 0 0;text-align:left"><label for="rwPage">What page are you on?</label><input id="rwPage" inputmode="numeric" placeholder="'+(book.page||"")+'"></div>':'')+
+    '<div class="actions" style="margin-top:14px"><button class="btn primary" type="button" id="rwOk">Nice!</button></div></div>';
+  document.body.appendChild(d);
+  $("rwOk").onclick=function(){var pg=$("rwPage")&&parseInt($("rwPage").value,10);if(book&&pg>0){book.page=Math.min(pg,book.pages||pg);save();render()}d.remove()};
+}
+
+/* ---- rewards page ---- */
+function openRewards(tabName){
+  var lv=levelOf(R.xp),cur=xpFor(lv),nxt=xpFor(lv+1),pct=Math.round((R.xp-cur)/(nxt-cur)*100),ci=checkinState(),got=Object.keys(R.ach).length;
+  var h='<h2>Rewards</h2>'+
+    '<div class="card lvcard"><div class="lvbig">'+lv+'</div><div style="flex:1;min-width:0"><b>Level '+lv+'</b><div class="note">'+(R.xp-cur)+' / '+(nxt-cur)+' XP to level '+(lv+1)+'</div><div class="xpbar"><b style="width:'+pct+'%"></b></div></div></div>'+
+    '<div class="walletrow"><div><i class="coin"></i><span>'+R.gold.toLocaleString()+'<small>Gold</small></span></div><div><i class="gem"></i><span>'+R.gems+'<small>Diamonds</small></span></div></div>'+
+    '<h3 class="sec">Daily check-in <span>'+(ci.claimed?"come back tomorrow":"day "+ci.day+" of 7")+'</span></h3>'+
+    '<div class="checkin">'+CHECKIN.map(function(rw,i){var n=i+1,done=ci.claimed?n<=ci.day:n<ci.day;return '<div class="'+(done?"done":"")+(!ci.claimed&&n===ci.day?" today":"")+'">D'+n+(rw[1]?'<i class="gem"></i>':'<i class="coin"></i>')+(rw[1]?'+'+rw[1]:'+'+rw[0])+'</div>'}).join("")+'</div>'+
+    (ci.claimed?'':'<button class="btn primary" id="claimBtn" type="button" style="width:100%">'+icon("gift",18)+' Claim today\'s reward</button>')+
+    '<h3 class="sec">Reading streak</h3><div class="card" style="display:flex;align-items:center;gap:14px"><span style="color:#D9692B">'+icon("flame",34)+'</span><div style="flex:1"><b style="font-size:1.2rem">'+(R.streak.count||0)+' day'+(R.streak.count===1?'':'s')+'</b><div class="note">Best: '+(R.streak.best||0)+' · Read 10+ minutes a day to keep it going</div></div><div style="text-align:center;font-weight:800">'+icon("snow",20)+'<div class="note">'+R.freezes+' freeze'+(R.freezes===1?'':'s')+'</div></div></div>'+
+    '<div class="tiles" style="margin-top:12px"><div class="tile"><small>Time read</small><div>'+(R.totalMin>=60?Math.floor(R.totalMin/60)+'h '+(R.totalMin%60)+'m':R.totalMin+'m')+'</div></div><div class="tile"><small>Sessions</small><div>'+R.sessions+'</div></div></div>'+
+    '<div class="segs" id="rwTabs" style="margin:18px 0 12px"><button type="button" data-v="ach" aria-pressed="'+(tabName!=="shop")+'">Achievements · '+got+'/'+ACH.length+'</button><button type="button" data-v="shop" aria-pressed="'+(tabName==="shop")+'">Shop</button></div><div id="rwPane"></div>';
+  openSheet(h);
+  if($("claimBtn"))$("claimBtn").onclick=function(){claimCheckin();openRewards(tabName)};
+  function pane(v){tabName=v;
+    if(v==="ach")$("rwPane").innerHTML='<div class="achgrid">'+ACH.map(function(a){var g=!!R.ach[a[0]];return '<div class="ach'+(g?' got':'')+'"><span class="medal">'+icon(g?"trophy":"lock",20)+'</span><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span><span class="rw">'+(a[4]?'<i class="coin"></i>'+a[4]:'')+(a[5]?'<i class="gem"></i>'+a[5]:'')+'</span></div>'}).join("")+'</div>';
+    else{
+      var groups=[["wood","Bookshelf wood"],["accent","App colour"],["ribbon","Bookmark ribbon"],["frame","Profile frame"],["boost","Boosts"]];
+      $("rwPane").innerHTML=groups.map(function(g){return '<h3 class="sec">'+g[1]+'</h3><div class="shopgrid">'+SHOP.filter(function(it){return it.kind===g[0]}).map(function(it){
+        var own=R.owned.indexOf(it.id)>-1,eq=R.eq[it.kind]===it.id,sw;
+        if(it.kind==="wood")sw='background:linear-gradient(transparent 62%,'+it.v[0]+' 62%,'+it.v[1]+')';
+        else if(it.kind==="accent")sw='background:'+it.v[0];
+        else if(it.kind==="ribbon")sw='background:var(--slot)';else sw='background:var(--slot)';
+        var inner=it.kind==="ribbon"?'<i style="position:absolute;left:50%;top:0;width:16px;height:44px;margin-left:-8px;background:'+it.v[0]+';clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)"></i>':it.kind==="frame"?'<span style="position:absolute;inset:0;display:grid;place-items:center">'+avatarHTML({avatar:(meCache&&meCache.avatar)||"book",color:(meCache&&meCache.color)||0,frame:it.v[0]},"sm")+'</span>':it.kind==="boost"?'<span style="position:absolute;inset:0;display:grid;place-items:center;color:#4FB6E8">'+icon("snow",30)+'</span>':'';
+        var btn=it.kind==="boost"?'<button class="buy" data-buy="'+it.id+'">'+priceHTML(it)+'</button>':eq?'<button class="buy eq" disabled>Equipped</button>':own?'<button class="buy own" data-buy="'+it.id+'">Equip</button>':'<button class="buy" data-buy="'+it.id+'">'+priceHTML(it)+'</button>';
+        return '<div class="item"><div class="sw2" style="'+sw+'">'+inner+'</div><b>'+esc(it.name)+'</b>'+(it.desc?'<span class="note" style="font-size:.75rem">'+esc(it.desc)+(it.kind==="boost"?' · you have '+R.freezes:'')+'</span>':'')+btn+'</div>'}).join("")+'</div>'}).join("")+
+        '<p class="note" style="margin-top:14px">Gold and diamonds are earned by reading. They can\'t be bought and have no cash value.</p>';
+    }
+  }
+  pane(tabName==="shop"?"shop":"ach");
+  $("rwTabs").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;[].forEach.call(this.children,function(b){b.setAttribute("aria-pressed",b.getAttribute("data-v")===v)});pane(v)};
+  $("rwPane").onclick=function(e){var t=e.target.closest("[data-buy]");if(!t)return;if(buy(shopItem(t.getAttribute("data-buy"))))openRewards("shop")};
+}
+$("walletBtn").onclick=function(){openRewards()};
+
+/* ---- share level, badges and frame on your community profile ---- */
+var statsTimer=null;
+function scheduleStats(){if(!session())return;clearTimeout(statsTimer);statsTimer=setTimeout(function(){
+  api("PATCH","/stats",{level:levelOf(R.xp),xp:R.xp,minutes:R.totalMin,streak:R.streak.count,badges:Object.keys(R.ach),frame:myFrame()}).catch(function(){})},3000)}
+
 /* ---------- add to home screen ---------- */
 var UA=navigator.userAgent||"";
 var isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
@@ -948,7 +1265,7 @@ $("installBtn").onclick=function(){if(!deferredInstall)return;deferredInstall.pr
 // no pinch-zoom (Safari ignores user-scalable=no in the browser)
 ["gesturestart","gesturechange"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
 
-render(); fillMissingCovers(); licenseGate(); maybeInstallPrompt(); if(!isLocked()){quietSignIn();scheduleSync(true)}
+applyCosmetics(); drawWallet(); if(R.active&&R.active.runningSince){R.active.runningSince=null;R.active.pausedFor="hidden";rSave()} checkAchievements(); render(); fillMissingCovers(); licenseGate(); maybeInstallPrompt(); if(!isLocked()){quietSignIn();scheduleSync(true)}
 })();
 </script>
 </body>
