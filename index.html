@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bookshelf">
-<meta name="theme-color" content="#F7F1E6">
+<meta name="theme-color" content="#F7F1E6" id="themeColor">
 <title>My Reading Year</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap">
@@ -19,17 +19,17 @@
 :root{
   --paper:#F7F1E6; --card:#FFFCF6; --ink:#2E2A26; --muted:#7A7066; --line:#E7DCCB;
   --sage:#5E7A5A; --sage-soft:#E3EBDD; --burgundy:#7A2E3A; --wood:#8B6446; --wood-dark:#6B4B33;
-  --gold:#C9962B; --slot:#EDE3D3; --shadow:0 1px 2px rgba(46,42,38,.06),0 6px 18px rgba(46,42,38,.07);
+  --gold:#C9962B; --btn:#7A2E3A; --btn-sage:#5E7A5A; --slot:#EDE3D3; --shadow:0 1px 2px rgba(46,42,38,.06),0 6px 18px rgba(46,42,38,.07);
   --display:"Lora",Georgia,"Times New Roman",serif; --body:"Nunito Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --paper:#1E1A17; --card:#29231F; --ink:#F1E8DC; --muted:#B3A698; --line:#3A322C;
   --sage:#9DBB97; --sage-soft:#2F3A2D; --burgundy:#D98A97; --wood:#7A5638; --wood-dark:#5C4029;
-  --gold:#E2B552; --slot:#352D27; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3); color-scheme:dark}}
+  --gold:#E2B552; --btn:#A9404F; --btn-sage:#4E6B4A; --slot:#352D27; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3); color-scheme:dark}}
 :root[data-theme="dark"]{--paper:#1E1A17; --card:#29231F; --ink:#F1E8DC; --muted:#B3A698; --line:#3A322C;
   --sage:#9DBB97; --sage-soft:#2F3A2D; --burgundy:#D98A97; --wood:#7A5638; --wood-dark:#5C4029;
-  --gold:#E2B552; --slot:#352D27; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3); color-scheme:dark}
+  --gold:#E2B552; --btn:#A9404F; --btn-sage:#4E6B4A; --slot:#352D27; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.3); color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
 /* app shell: the screen stays put, only the middle area scrolls (no page bounce, no zoom) */
@@ -111,7 +111,7 @@ nav.tabs{position:relative;flex:0 0 auto;background:var(--card);border-top:1px s
 nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:800;color:var(--muted);padding:6px}
 nav.tabs button[aria-current="page"]{color:var(--burgundy)}
 nav.tabs svg{width:24px;height:24px}
-.fab{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 18px));bottom:calc(80px + env(safe-area-inset-bottom,0px));border:0;border-radius:999px;background:var(--burgundy);color:#fff;font-weight:800;padding:14px 20px;box-shadow:0 8px 22px rgba(122,46,58,.35);z-index:21;display:flex;align-items:center;gap:8px}
+.fab{position:fixed;right:max(18px,calc(env(safe-area-inset-right,0px) + 18px));bottom:calc(80px + env(safe-area-inset-bottom,0px));border:0;border-radius:999px;background:var(--btn);color:#fff;font-weight:800;padding:14px 20px;box-shadow:0 8px 22px rgba(122,46,58,.35);z-index:21;display:flex;align-items:center;gap:8px}
 /* sheet */
 /* full-screen pages (add / edit / settings) with a back arrow */
 .scrim{position:fixed;inset:0;background:var(--paper);z-index:40;display:flex;flex-direction:column}
@@ -137,10 +137,11 @@ nav.tabs svg{width:24px;height:24px}
 .ratingpick button.on{color:var(--gold)}
 .segs{display:flex;gap:6px;flex-wrap:wrap}
 .segs button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 12px;font-weight:700;font-size:.85rem}
-.segs button[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+.segs button[aria-pressed="true"]{background:var(--btn-sage);border-color:var(--btn-sage);color:#fff}
 .actions{display:flex;gap:10px;margin-top:8px}
 .btn{flex:1;border:0;border-radius:14px;padding:14px;font-weight:800}
-.btn.primary{background:var(--burgundy);color:#fff}
+.btn.primary{background:var(--btn);color:#fff}
+.field label.btn{text-transform:none;letter-spacing:0;font-size:1rem;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .btn.ghost{background:var(--card);border:1px solid var(--line)}
 .btn.danger{background:none;color:var(--burgundy);flex:0 0 auto}
 .note{font-size:.82rem;color:var(--muted)}
@@ -169,7 +170,7 @@ nav.tabs svg{width:24px;height:24px}
 .install > p{color:var(--muted);margin:0 0 20px;max-width:340px;line-height:1.45}
 .isteps{list-style:none;padding:0;margin:0 0 22px;width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;text-align:left}
 .isteps li{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:600;line-height:1.35}
-.isteps b.n{width:32px;height:32px;border-radius:50%;background:var(--sage);color:#fff;display:grid;place-items:center;font-size:.95rem}
+.isteps b.n{width:32px;height:32px;border-radius:50%;background:var(--btn-sage);color:#fff;display:grid;place-items:center;font-size:.95rem}
 .isteps svg{vertical-align:-5px;color:#2F6FD6}
 .install .btn{width:100%;max-width:360px}
 .install .later{border:0;background:none;color:var(--muted);font-weight:700;margin-top:14px;padding:8px}
@@ -289,6 +290,14 @@ nav.tabs svg{width:24px;height:24px}
 <script>
 (function(){
 "use strict";
+var THKEY="bookshelf-theme-v1";
+function getTheme(){try{return localStorage.getItem(THKEY)||"auto"}catch(e){return "auto"}}
+function applyTheme(v){var r=document.documentElement;if(v==="light"||v==="dark")r.setAttribute("data-theme",v);else r.removeAttribute("data-theme");
+  var dark=v==="dark"||(v!=="light"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
+  var m=document.getElementById("themeColor");if(m)m.setAttribute("content",dark?"#1E1A17":"#F7F1E6")}
+function setTheme(v){try{localStorage.setItem(THKEY,v)}catch(e){}applyTheme(v)}
+applyTheme(getTheme());
+if(window.matchMedia){var mq=matchMedia("(prefers-color-scheme: dark)");(mq.addEventListener?mq.addEventListener.bind(mq,"change"):mq.addListener.bind(mq))(function(){applyTheme(getTheme())})}
 var KEY="bookshelf-app-v1";
 var GENRES=[["Romance","#B5546A"],["Romantasy","#8E3B5E"],["Fantasy","#4F7A5A"],["Thriller","#8A3B2B"],["Mystery","#3E5A7A"],["Horror","#3A3A3A"],["Sci-Fi","#2F6F86"],["Classics","#6B4F3A"],["Literary","#7A6A4F"],["Historical","#9A6B2F"],["Young Adult","#6A5ACD"],["Nonfiction","#5A6B70"],["Self-help","#B8862A"],["Memoir","#8C6E5A"],["Graphic novel","#C0613C"],["Other","#8C7B6B"]];
 var FORMATS=["Print","Ebook","Audiobook"], STATUSES=["Reading","Finished","TBR","DNF"];
@@ -446,12 +455,14 @@ function openEditor(id){
 function openSettings(){
   if(isLocked()){showLock("Unlock to set your goal and start your own shelf.");return}
   openSheet('<h2 id="sheetTitle">Settings</h2>'+
+    '<div class="field"><label>Appearance</label><div class="segs" id="sTheme">'+[["auto","Auto"],["light","Light"],["dark","Dark"]].map(function(o){return '<button type="button" data-v="'+o[0]+'" aria-pressed="'+(getTheme()===o[0])+'">'+o[1]+'</button>'}).join("")+'</div><p class="note" style="margin:6px 0 0">Auto follows your phone\'s light or dark setting.</p></div>'+
     '<div class="two"><div class="field"><label for="sYear">Year</label><input id="sYear" inputmode="numeric" value="'+state.year+'"></div><div class="field"><label for="sGoal">Reading goal</label><input id="sGoal" inputmode="numeric" value="'+state.goal+'"></div></div>'+
     '<div class="field"><label>Back up your books</label><p class="note" style="margin:0 0 8px">Your books are saved on this phone, in this browser. Download a backup now and then, and use it to move your shelf to a new phone.</p><div class="actions" style="margin:0"><button type="button" class="btn ghost" id="expBtn">Download backup</button><label class="btn ghost" style="text-align:center" for="impFile">Restore backup</label><input type="file" id="impFile" accept="application/json,.json" hidden></div></div>'+
     '<div class="field"><label>Start fresh</label><p class="note" style="margin:0 0 8px">Delete every book and start a new shelf.</p><div class="actions" style="margin:0"><button type="button" class="btn danger" id="clrAll" style="flex:1;border:1px solid var(--line);border-radius:14px">Clear all books</button></div></div>'+
     '<p class="note">Add to your home screen: in Safari tap Share, then Add to Home Screen. In Chrome tap ⋮, then Add to Home screen.</p>'+
     '<p class="note">Covers and book details come from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>.</p>'+
     '<div class="actions"><button type="button" class="btn primary" id="sSave">Done</button></div>');
+  $("sTheme").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;setTheme(v);[].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",c.getAttribute("data-v")===v)})};
   $("sSave").onclick=function(){state.year=parseInt($("sYear").value,10)||thisYear;state.goal=Math.max(1,parseInt($("sGoal").value,10)||24);save();closeSheet();render()};
   $("expBtn").onclick=function(){var blob=new Blob([JSON.stringify(state,null,1)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-bookshelf-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);toast("Backup downloaded")};
   $("impFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.books)throw 0;state=s;save();closeSheet();render();toast("Shelf restored")}catch(e){toast("That file isn't a bookshelf backup")}};r.readAsText(f)};
@@ -477,22 +488,23 @@ var REASONS={not_found:"That key wasn't found. Check it against your Payhip rece
 function getLic(){try{return JSON.parse(localStorage.getItem(LKEY))}catch(e){return null}}
 function setLic(v){try{if(v)localStorage.setItem(LKEY,JSON.stringify(v));else localStorage.removeItem(LKEY)}catch(e){}}
 function callKey(path,key){return fetch(CHECK_URL.replace(/\/$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:key})}).then(function(r){return r.json()})}
-/* free trial: full app for 30 minutes per browser, then the lock comes back */
-var TKEY="bookshelf-trial-v1", TRIAL_MS=30*60*1000, memTrial=0, ticker=null;
+/* free trial: full app for 3 hours per browser, then the lock comes back */
+var TKEY="bookshelf-trial-v1", TRIAL_MS=3*60*60*1000, memTrial=0, ticker=null;
 function trialStart(){try{return +localStorage.getItem(TKEY)||memTrial}catch(e){return memTrial}}
 function startTrial(){memTrial=Date.now();try{localStorage.setItem(TKEY,String(memTrial))}catch(e){}}
 function trialLeft(){var s=trialStart();return s?Math.max(0,s+TRIAL_MS-Date.now()):0}
 function hasKey(){var l=getLic();return !!(l&&l.key)}
 function isLocked(){return !!CHECK_URL&&!hasKey()&&trialLeft()<=0}
 function mins(ms){return Math.max(1,Math.ceil(ms/60000))}
+function timeLeft(ms){var m=mins(ms),h=Math.floor(m/60);return h?(h+" h "+(m%60?m%60+" min ":""))+"left":m+" min left"}
 function tick(){
   var pill=$("trialPill");
   if(hasKey()){pill.hidden=true;clearInterval(ticker);ticker=null;return}
   var left=trialLeft();
-  if(left>0){pill.hidden=false;pill.textContent="Free trial · "+mins(left)+" min left";return}
+  if(left>0){pill.hidden=false;pill.textContent="Free trial · "+timeLeft(left);return}
   pill.hidden=true;clearInterval(ticker);ticker=null;
   if(!$("scrim").hidden)closeSheet();
-  showLock("Your free 30 minutes are up. Enter your key to keep your shelf.");
+  showLock("Your free 3 hours are up. Enter your key to keep your shelf.");
 }
 function runTrial(){tick();if(!ticker)ticker=setInterval(tick,15000)}
 function showLock(msg){
@@ -500,14 +512,14 @@ function showLock(msg){
   $("lockMsg").textContent=msg||"";
   var started=trialStart(), left=trialLeft(), pb=$("peekBtn");
   pb.hidden=!!started&&left<=0;
-  pb.textContent=started?("Keep trying · "+mins(left)+" min left"):"Try it free for 30 minutes";
+  pb.textContent=started?("Keep trying · "+timeLeft(left)):"Try it free for 3 hours";
   $("buyLine").innerHTML=BUY_URL?'No key yet? <a href="'+esc(BUY_URL)+'" target="_blank" rel="noopener">Get My Reading Year</a>':'';
 }
 $("peekBtn").onclick=function(){
   var first=!trialStart();if(first)startTrial();
-  if(trialLeft()<=0){showLock("Your free 30 minutes are up. Enter your key to keep your shelf.");return}
+  if(trialLeft()<=0){showLock("Your free 3 hours are up. Enter your key to keep your shelf.");return}
   $("lock").hidden=true;runTrial();
-  toast(first?"Your 30-minute free trial has started":"Trial: "+mins(trialLeft())+" min left");
+  toast(first?"Your 3-hour free trial has started":"Trial: "+timeLeft(trialLeft()));
 };
 $("trialPill").onclick=function(){showLock()};
 $("lockForm").addEventListener("submit",function(e){
