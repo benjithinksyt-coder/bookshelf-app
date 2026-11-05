@@ -201,17 +201,21 @@ nav.tabs button{position:relative}
 .pick{display:flex;flex-wrap:wrap;gap:8px}
 .pick button{border:2px solid transparent;background:var(--card);border-radius:12px;width:44px;height:44px;font-size:1.3rem;display:grid;place-items:center;padding:0}
 .pick button[aria-pressed="true"]{border-color:var(--btn)}
-.pick .sw{width:34px;height:34px;border-radius:50%}
+.pick .sw{display:block;width:30px;height:30px;min-width:30px;border-radius:50%;flex:0 0 30px}
 .toggle{display:flex;align-items:center;gap:10px;font-weight:700}
-.toggle input{width:22px;height:22px;accent-color:var(--btn)}
+.toggle input{width:22px;height:22px;min-width:22px;flex:0 0 22px;accent-color:var(--btn)}
 .join{text-align:center;padding:26px 18px}
 .join h3{font-family:var(--display);font-size:1.35rem;margin:10px 0 6px}
 .join p{color:var(--muted);margin:0 0 16px;line-height:1.45}
 .menu{display:flex;flex-direction:column;gap:8px}
 .sbtn.aud{background:var(--card);border-color:var(--line);color:var(--ink)}
 .audcard{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:6px 0 4px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);text-decoration:none}
-.audcard .ai{font-size:1.6rem}.audcard .at{min-width:0;display:flex;flex-direction:column;gap:2px}.audcard .at b{font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.audcard .ai{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--slot);color:var(--ink)}.audcard .at{min-width:0;display:flex;flex-direction:column;gap:2px}.audcard .at b{font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .audcard .at span{font-size:.78rem;color:var(--muted)}.audcard .ag{font-weight:800;font-size:.85rem;color:var(--btn);white-space:nowrap}
+.ic{flex:0 0 auto;vertical-align:-3px}
+.av .ic{color:#fff;vertical-align:0}
+.pick button{color:var(--ink)}
+.jic{width:58px;height:58px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:var(--slot);color:var(--ink)}
 /* store */
 .srow{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px}
 .srow .cover,.srow .fakecover{width:64px}
@@ -661,7 +665,7 @@ function drawStore(docs){
   storeDocs=docs;
   $("storeList").innerHTML=docs.length?docs.map(function(d,i){var fb={id:"s"+i,title:d.title,author:docAuthor(d),genre:guessGenre(d.subject),cover:d.cover_i?coverUrl(d.cover_i):""};var have=inShelf(d);
     return '<div class="srow"><button class="bookbtn" data-sd="'+i+'" aria-label="Details for '+esc(d.title)+'">'+(fb.cover?'<img class="cover" src="'+fb.cover+'" alt="" loading="lazy" decoding="async">':fake(fb))+'</button><div class="info"><button class="open" data-sd="'+i+'">'+esc(d.title)+'</button><div class="by">'+esc(fb.author||"Unknown author")+(d.first_publish_year?" · "+d.first_publish_year:"")+'</div>'+rateHTML(d)+
-    '<div class="sbtns"><button class="sbtn'+(have?' done':'')+'" data-tbr="'+i+'">'+(have?'✓ On your shelf':'+ To read')+'</button><a class="sbtn amz" href="'+amazonUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">Amazon ↗</a><a class="sbtn aud" href="'+audibleUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">🎧 Listen free</a></div></div></div>'}).join("")
+    '<div class="sbtns"><button class="sbtn'+(have?' done':'')+'" data-tbr="'+i+'">'+(have?'✓ On your shelf':'+ To read')+'</button><a class="sbtn amz" href="'+amazonUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">Amazon ↗</a><a class="sbtn aud" href="'+audibleUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">'+icon("headphones",15)+' Listen free</a></div></div></div>'}).join("")
     :'<div class="empty-state">No books found. Try another title or author.</div>';
 }
 function loadStore(kind,v){
@@ -677,7 +681,7 @@ function openStoreBook(d){
   openSheet('<h2>'+esc(d.title)+'</h2><div class="detail">'+(fb.cover?'<img class="cover" src="'+fb.cover+'" alt="Cover of '+esc(d.title)+'">':fake(fb))+
     '<div style="min-width:0"><div class="title">'+esc(d.title)+'</div><div class="author">'+esc(a||"Unknown author")+'</div><div class="note" style="margin:6px 0">'+[d.first_publish_year,d.number_of_pages_median?d.number_of_pages_median+" pages":""].filter(Boolean).join(" · ")+'</div>'+rateHTML(d)+'</div></div>'+
     '<div class="actions" style="margin:0 0 6px"><button class="btn ghost" id="dTbr" type="button">'+(inShelf(d)?'✓ On your shelf':'+ Add to To read')+'</button><a class="btn primary" style="text-align:center;text-decoration:none;background:#FFD814;color:#111" href="'+amazonUrl(d.title,a)+'" target="_blank" rel="noopener sponsored">Price &amp; reviews on Amazon ↗</a></div>'+
-    '<a class="audcard" href="'+audibleUrl(d.title,a)+'" target="_blank" rel="noopener sponsored"><span class="ai" aria-hidden="true">🎧</span><span class="at"><b>Listen to '+esc(d.title)+'</b><span>Free Audible trial for new members · cancel anytime</span></span><span class="ag">Try free ↗</span></a>'+
+    '<a class="audcard" href="'+audibleUrl(d.title,a)+'" target="_blank" rel="noopener sponsored"><span class="ai">'+icon("headphones",26)+'</span><span class="at"><b>Listen to '+esc(d.title)+'</b><span>Free Audible trial for new members · cancel anytime</span></span><span class="ag">Try free ↗</span></a>'+
     '<h3 class="sec">About this book</h3><p class="desc" id="dDesc">Loading…</p>'+
     ((d.subject||[]).length?'<div class="subj">'+d.subject.slice(0,8).map(function(x){return '<span>'+esc(x)+'</span>'}).join("")+'</div>':'')+
     '<p class="note">Book details from Open Library'+(AMAZON_TAG?'. As an Amazon Associate I earn from qualifying purchases.':'.')+'</p>');
@@ -696,7 +700,28 @@ var storeLoaded=false;
 
 /* ---------- community: profiles, feed, likes, comments ---------- */
 var SKEY="bookshelf-session-v1", meCache=null, feedTab="following", feedPosts=[], feedEnd=false, syncTimer=null;
-var AVATARS=["📚","📖","☕","🌙","🌸","🍂","🕯️","🐈","🦉","🌿","✨","🧸"];
+var ICONS={
+  book:'<path d="M4 5.5v13M8 4v16M12 6v14"/><path d="M15 6.5l3-.8 2.6 13.6-3 .7z"/><path d="M3 20h18"/>',
+  open:'<path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/>',
+  cup:'<path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c-.6 1 .6 1.6 0 2.6M12 3.5c-.6 1 .6 1.6 0 2.6"/>',
+  moon:'<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/>',
+  flower:'<circle cx="12" cy="10" r="2.2"/><path d="M12 7.8c-1.4-3 2.8-3 1.4 0M14.2 10c3-1.4 3 2.8 0 1.4M12 12.2c1.4 3-2.8 3-1.4 0M9.8 10c-3 1.4-3-2.8 0-1.4"/><path d="M12 12.5V21M12 17c-2 0-3.5-1-4-2.5M12 18.5c2 0 3.5-1 4-2.5"/>',
+  leaf:'<path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 15"/><path d="M5 19 13 11"/>',
+  candle:'<path d="M9 10h6v10H9z"/><path d="M12 10V8"/><path d="M12 3c1.5 1.8 1.5 3.2 0 4.2-1.5-1-1.5-2.4 0-4.2z"/><path d="M7 20h10"/>',
+  cat:'<path d="M5 20v-8.5L4 5l4 3h8l4-3-1 6.5V20z"/><path d="M9.5 13h.01M14.5 13h.01"/><path d="M11 16h2"/>',
+  owl:'<path d="M6 6l2 2h8l2-2v9a6 6 0 0 1-12 0z"/><circle cx="9.5" cy="11.5" r="1.8"/><circle cx="14.5" cy="11.5" r="1.8"/><path d="M11.3 14.5 12 15.5l.7-1"/>',
+  glasses:'<circle cx="7" cy="14" r="3.2"/><circle cx="17" cy="14" r="3.2"/><path d="M10.2 13.5c1.2-.8 2.4-.8 3.6 0"/><path d="M3.8 13.5 5 8.5M20.2 13.5 19 8.5"/>',
+  pen:'<path d="M15 4l5 5L9 20H4v-5z"/><path d="M13 6l5 5"/>',
+  star:'<path d="M12 3.5l2.4 5.6 6 .5-4.6 4 1.4 5.9L12 16.4 6.8 19.5l1.4-5.9-4.6-4 6-.5z"/>',
+  headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><path d="M4 15h3v5H5.5A1.5 1.5 0 0 1 4 18.5zM20 15h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  user:'<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>'
+};
+function icon(name,size,fill){return '<svg width="'+(size||20)+'" height="'+(size||20)+'" viewBox="0 0 24 24" fill="'+(fill?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ic">'+(ICONS[name]||ICONS.book)+'</svg>'}
+var AVATARS=["book","open","cup","moon","flower","leaf","candle","cat","owl","glasses","pen","star"];
+var LEGACY_AV={"📚":"book","📖":"open","☕":"cup","🌙":"moon","🌸":"flower","🍂":"leaf","🕯️":"candle","🐈":"cat","🦉":"owl","🌿":"leaf","✨":"star","🧸":"star"};
 function session(){try{return localStorage.getItem(SKEY)||""}catch(e){return ""}}
 function setSession(t){try{if(t)localStorage.setItem(SKEY,t);else localStorage.removeItem(SKEY)}catch(e){}}
 function api(method,path,body){
@@ -707,7 +732,7 @@ function api(method,path,body){
 }
 var SOCIAL_ERR={username_taken:"That username is taken. Try another.",bad_username:"Usernames are 3–20 letters, numbers, dots or underscores.",need_agree:"Please tick the box to agree.",slow_down:"You're posting a lot. Try again in a little while.",try_again:"Couldn't reach the server. Try again in a minute.",database_not_connected:"The community isn't switched on yet.",not_found:"Not found.",disabled:"This key has been turned off."};
 function errMsg(j){return SOCIAL_ERR[j&&j.reason]||"Something went wrong. Try again."}
-function avatarHTML(u,cls){var a=u.avatar||(u.name||u.username||"?").charAt(0).toUpperCase();return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+'">'+esc(a)+'</span>'}
+function avatarHTML(u,cls){var k=LEGACY_AV[u.avatar]||u.avatar,inner=ICONS[k]?icon(k,cls==="big"?42:cls==="sm"?16:21):esc((u.name||u.username||"?").charAt(0).toUpperCase());return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+'">'+inner+'</span>'}
 function ago(ts){var s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return s+"s";var m=Math.round(s/60);if(m<60)return m+"m";var h=Math.round(m/60);if(h<24)return h+"h";var d=Math.round(h/24);if(d<7)return d+"d";return new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
 function quietSignIn(){var l=getLic();if(!l||!l.key||session())return;api("POST","/signup",{key:l.key}).then(function(j){if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true)}}).catch(function(){})}
 /* sync only what changed: remember a fingerprint of each book we last sent */
@@ -739,12 +764,12 @@ function postHTML(p){
   var fb={id:"p"+p.id,title:p.title,author:p.author,genre:"Other",cover:p.cover};
   return '<article class="post" data-pid="'+p.id+'"><div class="phead"><button class="who" data-user="'+esc(p.user.username)+'">'+avatarHTML(p.user)+'<span style="min-width:0"><b>'+esc(p.user.name)+'</b><span>@'+esc(p.user.username)+' · '+ago(p.created)+'</span></span></button><button class="more" data-more="'+p.id+'" aria-label="More options">⋯</button></div>'+
     '<div class="pimg">'+(p.cover?'<img class="cover" src="'+esc(p.cover.replace("-S.jpg","-M.jpg"))+'" alt="Cover of '+esc(p.title)+'" loading="lazy" decoding="async">':fake(fb))+'</div>'+
-    '<div class="pact"><button class="'+(p.liked?'on':'')+'" data-like="'+p.id+'" aria-label="Like">'+(p.liked?'♥':'♡')+' <span>'+p.likes+'</span></button><button data-comments="'+p.id+'" aria-label="Comments">💬 <span>'+p.comments+'</span></button><span class="sp"></span><button data-want="'+p.id+'">+ To read</button></div>'+
+    '<div class="pact"><button class="'+(p.liked?'on':'')+'" data-like="'+p.id+'" aria-label="Like">'+icon("heart",21,p.liked)+' <span>'+p.likes+'</span></button><button data-comments="'+p.id+'" aria-label="Comments">'+icon("chat",20)+' <span>'+p.comments+'</span></button><span class="sp"></span><button data-want="'+p.id+'">+ To read</button></div>'+
     '<div class="ptext"><b>'+esc(p.user.name)+'</b> <span class="what">'+kindText(p.kind)+'</span> <span class="bt">'+esc(p.title)+'</span>'+(p.author?' <span class="what">by '+esc(p.author)+'</span>':'')+(p.rating?' <span class="stars">'+stars(p.rating)+'</span>':'')+
     (p.body?'<div class="pbody">'+esc(p.body)+'</div>':'')+'</div></article>';
 }
 function openFeed(){
-  if(isLocked()){$("feedTop").innerHTML="";$("feedList").innerHTML='<div class="card join"><div style="font-size:2.4rem">📚</div><h3>Join the reading community</h3><p>See what other readers are finishing, follow friends, and share your shelf. Unlock with your license key to join.</p><button class="btn primary" id="joinUnlock" type="button">Unlock to join</button></div>';$("joinUnlock").onclick=function(){showLock()};return}
+  if(isLocked()){$("feedTop").innerHTML="";$("feedList").innerHTML='<div class="card join"><div class="jic">'+icon("open",30)+'</div><h3>Join the reading community</h3><p>See what other readers are finishing, follow friends, and share your shelf. Unlock with your license key to join.</p><button class="btn primary" id="joinUnlock" type="button">Unlock to join</button></div>';$("joinUnlock").onclick=function(){showLock()};return}
   if(!hasKey()){   // free trial: browse Discover as a guest
     feedTab="discover";
     $("feedTop").innerHTML='<div class="card" style="display:flex;gap:12px;align-items:center;margin-bottom:12px"><div style="flex:1;min-width:0"><b>You\'re browsing as a guest</b><div class="note">Unlock to post, like, comment and follow readers.</div></div><button class="sbtn" id="guestUnlock" type="button" style="background:var(--btn);color:#fff;border-color:var(--btn)">Unlock</button></div>';
@@ -753,12 +778,12 @@ function openFeed(){
   }
   if(!session()){
     $("feedTop").innerHTML="";
-    $("feedList").innerHTML='<div class="card join"><div style="font-size:2.4rem">📚</div><h3>Join the reading community</h3><p>Make a profile to follow other readers, see their shelves, and share what you\'re reading. Your profile is public, and you can make it private anytime.</p><button class="btn primary" id="joinBtn" type="button">Create my profile</button></div>';
+    $("feedList").innerHTML='<div class="card join"><div class="jic">'+icon("open",30)+'</div><h3>Join the reading community</h3><p>Make a profile to follow other readers, see their shelves, and share what you\'re reading. Your profile is public, and you can make it private anytime.</p><button class="btn primary" id="joinBtn" type="button">Create my profile</button></div>';
     $("joinBtn").onclick=function(){var l=getLic();if(!l||!l.key){showLock("Unlock with your key to join the community.");return}this.disabled=true;this.textContent="Checking…";var btn=this;
       api("POST","/signup",{key:l.key}).then(function(j){btn.disabled=false;btn.textContent="Create my profile";if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true);openFeed()}else if(j.reason==="need_username")openSignup();else toast(errMsg(j))}).catch(function(){btn.disabled=false;btn.textContent="Create my profile";toast("Couldn't connect. Check your internet.")})};
     return;
   }
-  $("feedTop").innerHTML='<div class="ftop"><div class="segs" id="feedSegs"><button type="button" data-v="following" aria-pressed="'+(feedTab==="following")+'">Following</button><button type="button" data-v="discover" aria-pressed="'+(feedTab==="discover")+'">Discover</button></div><button class="iconbtn" id="findBtn" aria-label="Find readers"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button><button class="iconbtn" id="meBtn" aria-label="My profile" style="padding:0;overflow:hidden">'+(meCache?avatarHTML(meCache,"sm"):'👤')+'</button></div>';
+  $("feedTop").innerHTML='<div class="ftop"><div class="segs" id="feedSegs"><button type="button" data-v="following" aria-pressed="'+(feedTab==="following")+'">Following</button><button type="button" data-v="discover" aria-pressed="'+(feedTab==="discover")+'">Discover</button></div><button class="iconbtn" id="findBtn" aria-label="Find readers"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button><button class="iconbtn" id="meBtn" aria-label="My profile" style="padding:0;overflow:hidden">'+(meCache?avatarHTML(meCache,"sm"):icon("user",20))+'</button></div>';
   $("feedSegs").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v||v===feedTab)return;feedTab=v;feedPosts=[];openFeed()};
   $("findBtn").onclick=openFind;
   $("meBtn").onclick=function(){if(meCache)openProfile(meCache.username)};
@@ -785,7 +810,7 @@ function postClicks(e){
   if(t.hasAttribute("data-user")){openProfile(t.getAttribute("data-user"));return}
   if(!session()&&!t.hasAttribute("data-comments")){showLock(t.hasAttribute("data-want")||t.hasAttribute("data-more")?"Unlock to save books and use the community.":"Unlock to like, comment and follow.");return}
   var id=+(t.getAttribute("data-like")||t.getAttribute("data-comments")||t.getAttribute("data-want")||t.getAttribute("data-more")),p=findPost(id);if(!p)return;
-  if(t.hasAttribute("data-like")){var on=!p.liked;p.liked=on;p.likes+=on?1:-1;t.classList.toggle("on",on);t.innerHTML=(on?'♥':'♡')+' <span>'+p.likes+'</span>';
+  if(t.hasAttribute("data-like")){var on=!p.liked;p.liked=on;p.likes+=on?1:-1;t.classList.toggle("on",on);t.innerHTML=icon("heart",21,on)+' <span>'+p.likes+'</span>';
     api(on?"POST":"DELETE","/posts/"+id+"/like").then(function(j){if(j.ok){p.likes=j.likes;t.querySelector("span").textContent=j.likes}})}
   else if(t.hasAttribute("data-comments"))openComments(p);
   else if(t.hasAttribute("data-want")){if(addToTBR({title:p.title,author_name:[p.author],cover_i:null,subject:[]})){var bk=state.books[0];bk.cover=p.cover||"";save();render()}}
@@ -829,10 +854,10 @@ function openProfile(username){
     var u=j.user,c=j.counts;window.__profPosts=j.posts||[];
     var btn=j.me?'<button class="btn ghost" id="pEdit" type="button">Edit profile'+(meCache&&meCache.requests?' · '+meCache.requests+' request'+(meCache.requests>1?'s':''):'')+'</button>'
       :'<button class="btn '+(j.follow==="none"?'primary':'ghost')+'" id="pFollow" type="button">'+(j.follow==="following"?"Following ✓":j.follow==="requested"?"Requested":"Follow")+'</button>';
-    var h='<div class="prof">'+avatarHTML(u,"big")+'<h3>'+esc(u.name)+'</h3><div class="handle">@'+esc(u.username)+(u.private?' · 🔒 Private':'')+'</div>'+(u.bio?'<p class="bio">'+esc(u.bio)+'</p>':'')+
+    var h='<div class="prof">'+avatarHTML(u,"big")+'<h3>'+esc(u.name)+'</h3><div class="handle">@'+esc(u.username)+(u.private?' · '+icon("lock",14)+' Private':'')+'</div>'+(u.bio?'<p class="bio">'+esc(u.bio)+'</p>':'')+
       '<div class="counts"><div><b>'+c.finished+'</b>Books read</div><div><b>'+c.followers+'</b>Followers</div><div><b>'+c.following+'</b>Following</div></div>'+
       '<div class="actions" style="margin:0 0 16px">'+btn+(j.me?'':'<button class="btn ghost" id="pMore" type="button" style="flex:0 0 56px" aria-label="More">⋯</button>')+'</div></div>';
-    if(!j.visible)h+='<div class="card join"><div style="font-size:2rem">🔒</div><h3>This shelf is private</h3><p>Follow @'+esc(u.username)+' to see their books and posts.</p></div>';
+    if(!j.visible)h+='<div class="card join"><div class="jic">'+icon("lock",28)+'</div><h3>This shelf is private</h3><p>Follow @'+esc(u.username)+' to see their books and posts.</p></div>';
     else{
       var bk=j.books||[];
       h+='<div class="segs" id="pTabs" style="margin-bottom:12px"><button type="button" data-v="shelf" aria-pressed="true">Shelf · '+bk.length+'</button><button type="button" data-v="posts" aria-pressed="false">Posts · '+c.posts+'</button></div><div id="pPane"></div>';
@@ -852,12 +877,12 @@ function openProfile(username){
 function openFind(){
   openSheet('<h2>Find readers</h2><input class="search" id="uq" type="search" placeholder="Search by name or @username" autocomplete="off"><div class="ulist" id="uRes"><p class="note">Type at least 2 letters.</p></div>');
   var tm;$("uq").oninput=function(){clearTimeout(tm);var v=this.value.trim().replace(/^@/,"");tm=setTimeout(function(){if(v.length<2){$("uRes").innerHTML='<p class="note">Type at least 2 letters.</p>';return}
-    api("GET","/search?q="+encodeURIComponent(v)).then(function(j){$("uRes").innerHTML=j.ok&&j.users.length?j.users.map(function(u){return '<button class="urow" type="button" data-user="'+esc(u.username)+'">'+avatarHTML(u)+'<span class="n"><b>'+esc(u.name)+'</b><span>@'+esc(u.username)+(u.private?' · 🔒':'')+'</span></span></button>'}).join(""):'<p class="note">No readers found.</p>'})},350)};
+    api("GET","/search?q="+encodeURIComponent(v)).then(function(j){$("uRes").innerHTML=j.ok&&j.users.length?j.users.map(function(u){return '<button class="urow" type="button" data-user="'+esc(u.username)+'">'+avatarHTML(u)+'<span class="n"><b>'+esc(u.name)+'</b><span>@'+esc(u.username)+(u.private?' · '+icon("lock",13):'')+'</span></span></button>'}).join(""):'<p class="note">No readers found.</p>'})},350)};
   $("uRes").onclick=function(e){var t=e.target.closest("[data-user]");if(t)openProfile(t.getAttribute("data-user"))};
   setTimeout(function(){$("uq").focus()},150);
 }
 function pickersHTML(av,color){
-  return '<div class="field"><label>Picture</label><div class="pick" id="avPick">'+AVATARS.map(function(a){return '<button type="button" data-a="'+a+'" aria-pressed="'+(a===av)+'">'+a+'</button>'}).join("")+'</div></div>'+
+  return '<div class="field"><label>Picture</label><div class="pick" id="avPick">'+AVATARS.map(function(a){return '<button type="button" data-a="'+a+'" aria-pressed="'+(a===av)+'" aria-label="'+a+'">'+icon(a,22)+'</button>'}).join("")+'</div></div>'+
     '<div class="field"><label>Colour</label><div class="pick" id="colPick">'+[0,1,2,3,4,5,6,7].map(function(c){return '<button type="button" data-c="'+c+'" aria-pressed="'+(c===color)+'" aria-label="Colour '+(c+1)+'"><span class="sw c'+c+'"></span></button>'}).join("")+'</div></div>';
 }
 function bindPickers(st){
@@ -865,7 +890,7 @@ function bindPickers(st){
   $("colPick").onclick=function(e){var b=e.target.closest("[data-c]");if(!b)return;st.color=+b.getAttribute("data-c");[].forEach.call(this.children,function(x){x.setAttribute("aria-pressed",x===b)})};
 }
 function openSignup(){
-  var st={avatar:"📚",color:0};
+  var st={avatar:"book",color:0};
   openSheet('<h2>Create your profile</h2>'+
     '<div class="field"><label for="suUser">Username</label><input id="suUser" autocapitalize="none" autocomplete="off" spellcheck="false" maxlength="20" placeholder="e.g. cozyreads"></div>'+
     '<div class="field"><label for="suName">Display name</label><input id="suName" maxlength="40" placeholder="Your name or nickname"></div>'+pickersHTML(st.avatar,st.color)+
@@ -880,7 +905,7 @@ function openSignup(){
     .catch(function(){b.disabled=false;$("suMsg").textContent="Couldn't connect. Check your internet."})};
 }
 function openEditProfile(){
-  var m=meCache||{},st={avatar:m.avatar||"📚",color:+m.color||0};
+  var m=meCache||{},st={avatar:LEGACY_AV[m.avatar]||m.avatar||"book",color:+m.color||0};
   openSheet('<h2>Edit profile</h2>'+
     '<div class="field"><label for="epName">Display name</label><input id="epName" maxlength="40" value="'+esc(m.name||"")+'"></div>'+
     '<div class="field"><label for="epBio">Bio</label><textarea id="epBio" rows="3" maxlength="160" placeholder="Favourite genres, current obsession, reading goal…">'+esc(m.bio||"")+'</textarea></div>'+pickersHTML(st.avatar,st.color)+
