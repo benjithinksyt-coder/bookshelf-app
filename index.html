@@ -160,6 +160,19 @@ nav.tabs button{position:relative}
 .c0{background:#7A2E3A}.c1{background:#5E7A5A}.c2{background:#2F6F86}.c3{background:#B5546A}.c4{background:#8B6446}.c5{background:#6A5ACD}.c6{background:#C0613C}.c7{background:#3A3A3A}
 .ftop{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .ftop .segs{flex:1}
+/* Instagram-style Feed: slim top bar, small text tabs */
+header.top.compact{margin-bottom:6px}
+header.top.compact .brand{font-size:1.25rem;line-height:1.2}
+header.top.compact .brand small{display:none}
+header.top.compact .iconbtn{width:36px;height:36px}
+header.top.compact .wallet{padding:3px 8px 3px 3px;font-size:.78rem}
+header.top.compact .wallet .lv{min-width:24px;height:24px;font-size:.72rem}
+.ftop .segs{gap:18px}
+.ftop .segs button{border:0;background:none;border-radius:0;padding:6px 0;font-size:.95rem;font-weight:800;color:var(--muted);border-bottom:2px solid transparent}
+.ftop .segs button[aria-pressed="true"]{background:none;color:var(--ink);border-bottom-color:var(--ink)}
+.ftop .iconbtn{width:36px;height:36px}
+.updbar{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:70;display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 8px 8px 16px;font-weight:700;font-size:.88rem;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+.updbar button{border:0;border-radius:999px;background:var(--btn);color:#fff;font-weight:800;padding:7px 14px}
 .ftop .iconbtn{flex:0 0 auto}
 .post{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:14px;overflow:hidden}
 .phead{display:flex;align-items:center;gap:10px;padding:12px 12px 8px}
@@ -618,7 +631,7 @@ function openSettings(){
 }
 
 /* ---------- tabs ---------- */
-function setTab(t){tab=t;$("addBtn").hidden=(t==="feed");if(t==="feed")openFeed();if(t==="store"&&!storeLoaded){storeLoaded=true;renderStore();loadStore("chip",storeChip)}["shelf","library","feed","store","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
+function setTab(t){tab=t;document.querySelector("header.top").classList.toggle("compact",t==="feed");$("addBtn").hidden=(t==="feed");if(t==="feed")openFeed();if(t==="store"&&!storeLoaded){storeLoaded=true;renderStore();loadStore("chip",storeChip)}["shelf","library","feed","store","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
   document.querySelectorAll("nav.tabs button").forEach(function(b){if(b.getAttribute("data-tab")===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});$("scroller").scrollTop=0}
 document.querySelectorAll("nav.tabs button").forEach(function(b){b.onclick=function(){setTab(b.getAttribute("data-tab"))}});
 $("filters").onclick=function(e){var v=e.target.getAttribute("data-filter");if(v){filter=v;renderLibrary();bindOpen()}};
@@ -1187,17 +1200,20 @@ function rewardBookFinished(nb,prev){
   if(nb.status!=="Finished"||prev==="Finished"||R.bookRewards[nb.id])return;
   R.bookRewards[nb.id]=today();var bag=newBag();grant(bag,100,50,0);applyBag(bag);showReward("You finished "+nb.title+"!",bag);
 }
-function showReward(title,bag,book){
+var popQueue=[];
+function showReward(title,bag,book){popQueue.push([title,bag,book]);if(popQueue.length===1)nextPop()}
+function nextPop(){
+  if(!popQueue.length)return;var title=popQueue[0][0],bag=popQueue[0][1],book=popQueue[0][2];
   var d=document.createElement("div");d.className="pop";
   d.innerHTML='<div class="popcard"><div class="jic" style="background:linear-gradient(135deg,#F3D57A,#C9962B);color:#fff">'+icon(bag.unlocked.length?"trophy":"star",28)+'</div><h3>'+esc(title)+'</h3>'+
     '<div class="earn">'+(bag.xp?'<span>+'+bag.xp+' XP</span>':'')+(bag.gold?'<span><i class="coin"></i> +'+bag.gold+'</span>':'')+(bag.gems?'<span><i class="gem"></i> +'+bag.gems+'</span>':'')+'</div>'+
     (bag.levelUp?'<p style="font-weight:800;margin:8px 0 0">Level up! You\'re now level '+bag.levelUp+'</p>':'')+
     (bag.notes.length?'<p class="note" style="margin:6px 0 0">'+bag.notes.map(esc).join(" · ")+'</p>':'')+
     (bag.unlocked.length?'<div class="unlocked">'+bag.unlocked.map(function(a){return '<div>'+icon("trophy",16)+' '+esc(a[1])+'</div>'}).join("")+'</div>':'')+
-    (book&&book.pages?'<div class="field" style="margin:12px 0 0;text-align:left"><label for="rwPage">What page are you on?</label><input id="rwPage" inputmode="numeric" placeholder="'+(book.page||"")+'"></div>':'')+
-    '<div class="actions" style="margin-top:14px"><button class="btn primary" type="button" id="rwOk">Nice!</button></div></div>';
+    (book&&book.pages?'<div class="field" style="margin:12px 0 0;text-align:left"><label>What page are you on?</label><input class="rwPage" inputmode="numeric" placeholder="'+(book.page||"")+'"></div>':'')+
+    '<div class="actions" style="margin-top:14px"><button class="btn primary rwOk" type="button">Nice!</button></div></div>';
   document.body.appendChild(d);
-  $("rwOk").onclick=function(){var pg=$("rwPage")&&parseInt($("rwPage").value,10);if(book&&pg>0){book.page=Math.min(pg,book.pages||pg);save();render()}d.remove()};
+  d.querySelector(".rwOk").onclick=function(){var inp=d.querySelector(".rwPage"),pg=inp&&parseInt(inp.value,10);if(book&&pg>0){book.page=Math.min(pg,book.pages||pg);save();render()}d.remove();popQueue.shift();nextPop()};
 }
 
 /* ---- rewards page ---- */
@@ -1240,6 +1256,17 @@ var statsTimer=null;
 function scheduleStats(){if(!session())return;clearTimeout(statsTimer);statsTimer=setTimeout(function(){
   api("PATCH","/stats",{level:levelOf(R.xp),xp:R.xp,minutes:R.totalMin,streak:R.streak.count,badges:Object.keys(R.ach),frame:myFrame()}).catch(function(){})},3000)}
 
+/* ---------- update banner: Home Screen apps can hold on to an old copy ---------- */
+var BUILD="2026-11-04.3", updShown=false;
+function checkForUpdate(){
+  if(updShown||location.protocol==="file:")return;
+  fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){
+    var m=t.match(/var BUILD="([^"]+)"/);if(!m||m[1]===BUILD)return;updShown=true;
+    var d=document.createElement("div");d.className="updbar";d.innerHTML='<span>New version available</span><button type="button">Refresh</button>';
+    d.querySelector("button").onclick=function(){location.replace(location.pathname+"?v="+Date.now())};document.body.appendChild(d);
+  }).catch(function(){});
+}
+
 /* ---------- add to home screen ---------- */
 var UA=navigator.userAgent||"";
 var isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
@@ -1265,6 +1292,7 @@ $("installBtn").onclick=function(){if(!deferredInstall)return;deferredInstall.pr
 // no pinch-zoom (Safari ignores user-scalable=no in the browser)
 ["gesturestart","gesturechange"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
 
+checkForUpdate(); document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")checkForUpdate()});
 applyCosmetics(); drawWallet(); if(R.active&&R.active.runningSince){R.active.runningSince=null;R.active.pausedFor="hidden";rSave()} checkAchievements(); render(); fillMissingCovers(); licenseGate(); maybeInstallPrompt(); if(!isLocked()){quietSignIn();scheduleSync(true)}
 })();
 </script>
