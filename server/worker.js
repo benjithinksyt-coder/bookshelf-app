@@ -170,10 +170,15 @@ async function route(req, env, origin) {
     return json({ ok: true, token: await newSession(db, id), me: publicUser(u), created: true }, origin);
   }
 
-  const me = await currentUser(req, db);
+  let me = await currentUser(req, db);
 
-  // public-ish reads allowed without login? No: the community is for key holders only.
-  if (!me) return json({ ok: false, reason: "signed_out" }, origin, 401);
+  // Guests (free-trial readers) can browse: the Discover feed, public profiles and comments. Everything else needs an account.
+  if (!me) {
+    const guestOk = m === "GET" && ((seg[1] === "feed") || (seg[1] === "u" && seg[2] && !seg[3]) || (seg[1] === "posts" && seg[2] && seg[3] === "comments"));
+    if (!guestOk) return json({ ok: false, reason: "signed_out" }, origin, 401);
+    me = { id: 0, username: "", guest: true };
+    if (seg[1] === "feed") url.searchParams.set("tab", "discover");
+  }
   const isAdmin = env.ADMIN && me.username.toLowerCase() === String(env.ADMIN).toLowerCase();
 
   // ---- me ----

@@ -604,7 +604,7 @@ $("lockForm").addEventListener("submit",function(e){
   if(!key){$("lockMsg").textContent="Paste your license key first.";return}
   $("lockBtn").disabled=true;$("lockBtn").textContent="Checking…";$("lockMsg").textContent="";
   callKey("/activate",key).then(function(res){
-    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;$("trialPill").hidden=true;toast("Unlocked. Happy reading!");quietSignIn()}
+    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;$("trialPill").hidden=true;toast("Unlocked. Happy reading!");quietSignIn();if(tab==="feed")openFeed()}
     else $("lockMsg").textContent=REASONS[res&&res.reason]||"That key didn't work. Check it and try again.";
   }).catch(function(){$("lockMsg").textContent="Couldn't connect. Check your internet and try again."})
   .then(function(){$("lockBtn").disabled=false;$("lockBtn").textContent="Unlock"});
@@ -721,10 +721,16 @@ function postHTML(p){
 }
 function openFeed(){
   if(isLocked()){$("feedTop").innerHTML="";$("feedList").innerHTML='<div class="card join"><div style="font-size:2.4rem">📚</div><h3>Join the reading community</h3><p>See what other readers are finishing, follow friends, and share your shelf. Unlock with your license key to join.</p><button class="btn primary" id="joinUnlock" type="button">Unlock to join</button></div>';$("joinUnlock").onclick=function(){showLock()};return}
+  if(!hasKey()){   // free trial: browse Discover as a guest
+    feedTab="discover";
+    $("feedTop").innerHTML='<div class="card" style="display:flex;gap:12px;align-items:center;margin-bottom:12px"><div style="flex:1;min-width:0"><b>You\'re browsing as a guest</b><div class="note">Unlock to post, like, comment and follow readers.</div></div><button class="sbtn" id="guestUnlock" type="button" style="background:var(--btn);color:#fff;border-color:var(--btn)">Unlock</button></div>';
+    $("guestUnlock").onclick=function(){showLock("Unlock to join the community.")};
+    loadFeed(true);return;
+  }
   if(!session()){
     $("feedTop").innerHTML="";
     $("feedList").innerHTML='<div class="card join"><div style="font-size:2.4rem">📚</div><h3>Join the reading community</h3><p>Make a profile to follow other readers, see their shelves, and share what you\'re reading. Your profile is public, and you can make it private anytime.</p><button class="btn primary" id="joinBtn" type="button">Create my profile</button></div>';
-    $("joinBtn").onclick=function(){var l=getLic();this.disabled=true;this.textContent="Checking…";var btn=this;
+    $("joinBtn").onclick=function(){var l=getLic();if(!l||!l.key){showLock("Unlock with your key to join the community.");return}this.disabled=true;this.textContent="Checking…";var btn=this;
       api("POST","/signup",{key:l.key}).then(function(j){btn.disabled=false;btn.textContent="Create my profile";if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true);openFeed()}else if(j.reason==="need_username")openSignup();else toast(errMsg(j))}).catch(function(){btn.disabled=false;btn.textContent="Create my profile";toast("Couldn't connect. Check your internet.")})};
     return;
   }
@@ -753,6 +759,7 @@ function findPost(id){for(var i=0;i<feedPosts.length;i++)if(feedPosts[i].id===id
 function postClicks(e){
   var t=e.target.closest("[data-like],[data-comments],[data-want],[data-more],[data-user]");if(!t)return;
   if(t.hasAttribute("data-user")){openProfile(t.getAttribute("data-user"));return}
+  if(!session()&&!t.hasAttribute("data-comments")){showLock(t.hasAttribute("data-want")||t.hasAttribute("data-more")?"Unlock to save books and use the community.":"Unlock to like, comment and follow.");return}
   var id=+(t.getAttribute("data-like")||t.getAttribute("data-comments")||t.getAttribute("data-want")||t.getAttribute("data-more")),p=findPost(id);if(!p)return;
   if(t.hasAttribute("data-like")){var on=!p.liked;p.liked=on;p.likes+=on?1:-1;t.classList.toggle("on",on);t.innerHTML=(on?'♥':'♡')+' <span>'+p.likes+'</span>';
     api(on?"POST":"DELETE","/posts/"+id+"/like").then(function(j){if(j.ok){p.likes=j.likes;t.querySelector("span").textContent=j.likes}})}
@@ -787,7 +794,8 @@ function openComments(p){
     if(d){e.preventDefault();api("DELETE","/comments/"+d).then(function(j){if(j.ok){list=list.filter(function(c){return c.id!==+d});p.comments=Math.max(0,p.comments-1);draw(list);drawFeed()}})}
     if(r){e.preventDefault();openReport("comment",+r)}
     if(u)openProfile(u)};
-  $("cForm").onsubmit=function(e){e.preventDefault();var v=$("cIn").value.trim();if(!v)return;$("cIn").value="";
+  if(!session()){$("cIn").placeholder="Unlock to join the conversation";$("cIn").readOnly=true;$("cIn").onclick=function(){showLock("Unlock to comment.")}}
+  $("cForm").onsubmit=function(e){e.preventDefault();if(!session()){showLock("Unlock to comment.");return}var v=$("cIn").value.trim();if(!v)return;$("cIn").value="";
     api("POST","/posts/"+p.id+"/comments",{body:v}).then(function(j){if(j.ok){list.push(j.comment);p.comments++;draw(list);drawFeed()}else toast(errMsg(j))})};
 }
 function openProfile(username){
@@ -812,8 +820,8 @@ function openProfile(username){
     }
     if(j.visible){pane("shelf");$("pTabs").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;[].forEach.call(this.children,function(b){b.setAttribute("aria-pressed",b.getAttribute("data-v")===v)});pane(v)}}
     if($("pEdit"))$("pEdit").onclick=openEditProfile;
-    if($("pFollow"))$("pFollow").onclick=function(){var b=this,un=j.follow!=="none";b.disabled=true;api(un?"DELETE":"POST","/u/"+encodeURIComponent(u.username)+"/follow").then(function(){feedPosts=[];openProfile(u.username)})};
-    if($("pMore"))$("pMore").onclick=function(){openSheet('<h2>@'+esc(u.username)+'</h2><div class="menu"><button class="btn ghost" id="uRep" type="button">Report @'+esc(u.username)+'</button><button class="btn ghost" id="uBlock" type="button">Block @'+esc(u.username)+'</button><button class="btn ghost" id="uBack" type="button">Back to profile</button></div>');
+    if($("pFollow"))$("pFollow").onclick=function(){if(!session()){showLock("Unlock to follow readers.");return}var b=this,un=j.follow!=="none";b.disabled=true;api(un?"DELETE":"POST","/u/"+encodeURIComponent(u.username)+"/follow").then(function(){feedPosts=[];openProfile(u.username)})};
+    if($("pMore"))$("pMore").onclick=function(){if(!session()){showLock("Unlock to use the community.");return}openSheet('<h2>@'+esc(u.username)+'</h2><div class="menu"><button class="btn ghost" id="uRep" type="button">Report @'+esc(u.username)+'</button><button class="btn ghost" id="uBlock" type="button">Block @'+esc(u.username)+'</button><button class="btn ghost" id="uBack" type="button">Back to profile</button></div>');
       $("uRep").onclick=function(){openReport("user",u.username)};$("uBlock").onclick=function(){blockUser(u.username)};$("uBack").onclick=function(){openProfile(u.username)}};
   });
 }
