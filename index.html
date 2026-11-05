@@ -181,8 +181,22 @@ header.top.compact .wallet .lv{min-width:24px;height:24px;font-size:.72rem}
 .phead .who span:not(.av){display:block;font-size:.78rem;color:var(--muted)}
 .phead .who .av{font-size:1.25rem}
 .more{border:0;background:none;color:var(--muted);font-size:1.3rem;padding:4px 8px;line-height:1}
-.pimg{background:var(--slot);display:flex;justify-content:center;padding:18px 0}
-.pimg .cover,.pimg .fakecover{width:52%;max-width:240px;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.pimg{position:relative;overflow:hidden;background:var(--slot);display:flex;justify-content:center;align-items:center;padding:26px 0;min-height:250px}
+.pimg>*{position:relative;z-index:1}
+/* the whole cover, at its real shape, crisp */
+.pimg img.cover{width:auto;height:auto;max-width:62%;max-height:400px;aspect-ratio:auto;object-fit:contain;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.35)}
+.pimg .fakecover{width:52%;max-width:240px;box-shadow:0 18px 40px rgba(0,0,0,.3)}
+/* post backgrounds (free: ambient glow of the cover's own colours) */
+.pimg.bg-ambient::before{content:"";position:absolute;inset:-40px;background:var(--cv) center/cover no-repeat;filter:blur(30px) saturate(1.3);opacity:.7;transform:scale(1.1)}
+.pimg.bg-ambient::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.04),rgba(0,0,0,.12))}
+.pimg.bg-grey{background:var(--slot)}
+.pimg.bg-linen{background-color:#EFE6D6;background-image:repeating-linear-gradient(0deg,rgba(120,95,60,.07) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(120,95,60,.06) 0 1px,transparent 1px 5px)}
+.pimg.bg-sunset{background:linear-gradient(160deg,#F9C98B 0%,#EE8E7A 45%,#9B5C8F 100%)}
+.pimg.bg-ocean{background:linear-gradient(165deg,#9FD6E0 0%,#4C93B8 50%,#22476E 100%)}
+.pimg.bg-sage{background:radial-gradient(circle at 30% 20%,#DDE8D5,#9DB591 60%,#6C8763)}
+.pimg.bg-stars{background-color:#141B33;background-image:radial-gradient(1.5px 1.5px at 20% 30%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 70% 20%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 85% 65%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 40% 80%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 10% 70%,#cfe3ff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 55% 50%,#fff 50%,transparent 51%),linear-gradient(#141B33,#2B2F5C)}
+.pimg.bg-blossom{background-color:#FBE4EA;background-image:radial-gradient(circle at 15% 25%,rgba(236,140,168,.55) 0 7px,transparent 8px),radial-gradient(circle at 80% 20%,rgba(236,140,168,.45) 0 10px,transparent 11px),radial-gradient(circle at 70% 80%,rgba(236,140,168,.5) 0 8px,transparent 9px),radial-gradient(circle at 25% 75%,rgba(236,140,168,.4) 0 6px,transparent 7px),linear-gradient(#FDEFF3,#F6D3DD)}
+.pimg.bg-gold{background:radial-gradient(circle at 50% 40%,#FFF1C2 0%,#E8BE54 45%,#A97A17 100%)}
 .pact{display:flex;align-items:center;gap:4px;padding:8px 8px 0}
 .pact button{border:0;background:none;display:flex;align-items:center;gap:5px;font-weight:800;font-size:.9rem;color:var(--ink);padding:6px 8px}
 .pact button.on{color:#D2395A}
@@ -850,7 +864,8 @@ function kindText(k){return {finished:"finished",started:"started reading",tbr:"
 function postHTML(p){
   var fb={id:"p"+p.id,title:p.title,author:p.author,genre:"Other",cover:p.cover};
   return '<article class="post" data-pid="'+p.id+'"><div class="phead"><button class="who" data-user="'+esc(p.user.username)+'">'+avatarHTML(p.user)+'<span style="min-width:0"><b>'+esc(p.user.name)+'</b><span>@'+esc(p.user.username)+' · '+ago(p.created)+'</span></span></button><button class="more" data-more="'+p.id+'" aria-label="More options">⋯</button></div>'+
-    '<div class="pimg">'+(p.cover?'<img class="cover" src="'+esc(p.cover.replace("-S.jpg","-M.jpg"))+'" alt="Cover of '+esc(p.title)+'" loading="lazy" decoding="async">':fake(fb))+'</div>'+
+    (function(){var big=p.cover?p.cover.replace(/-[SM]\.jpg$/,"-L.jpg"):"",bg=POSTBG.indexOf(p.user.bg)>-1?p.user.bg:"ambient";if(!big&&bg==="ambient")bg="grey";
+      return '<div class="pimg bg-'+bg+'"'+(big?' style="--cv:url(&quot;'+esc(big)+'&quot;)"':'')+'>'+(big?'<img class="cover" src="'+esc(big)+'" alt="Cover of '+esc(p.title)+'" loading="lazy" decoding="async" onerror="if(this.src.indexOf(\'-L.jpg\')>-1)this.src=this.src.replace(\'-L.jpg\',\'-M.jpg\')">':fake(fb))+'</div>'})()+
     '<div class="pact"><button class="'+(p.liked?'on':'')+'" data-like="'+p.id+'" aria-label="Like">'+icon("heart",21,p.liked)+' <span>'+p.likes+'</span></button><button data-comments="'+p.id+'" aria-label="Comments">'+icon("chat",20)+' <span>'+p.comments+'</span></button><span class="sp"></span><button data-want="'+p.id+'">+ To read</button></div>'+
     '<div class="ptext"><b>'+esc(p.user.name)+'</b> <span class="what">'+kindText(p.kind)+'</span> <span class="bt">'+esc(p.title)+'</span>'+(p.author?' <span class="what">by '+esc(p.author)+'</span>':'')+(p.rating?' <span class="stars">'+stars(p.rating)+'</span>':'')+
     (p.body?'<div class="pbody">'+esc(p.body)+'</div>':'')+'</div></article>';
@@ -1013,8 +1028,8 @@ function openEditProfile(){
 
 /* ---------- rewards: reading sessions, XP, gold, diamonds, achievements, shop ---------- */
 var RKEY="bookshelf-rewards-v1", DAILY_CAP_MIN=180, CHECK_EVERY_MIN=30;
-function rDefault(){return {xp:0,gold:0,gems:0,totalMin:0,sessions:0,day:{},streak:{last:"",count:0,best:0},checkin:{last:"",day:0},ach:{},owned:["wood-oak","accent-classic","ribbon-gold","frame-none"],eq:{wood:"wood-oak",accent:"accent-classic",ribbon:"ribbon-gold",frame:"frame-none"},freezes:0,bookRewards:{},active:null}}
-var R=(function(){try{var o=JSON.parse(localStorage.getItem(RKEY));if(o&&typeof o.xp==="number"){var d=rDefault();for(var k in d)if(!(k in o))o[k]=d[k];return o}}catch(e){}return rDefault()})();
+function rDefault(){return {xp:0,gold:0,gems:0,totalMin:0,sessions:0,day:{},streak:{last:"",count:0,best:0},checkin:{last:"",day:0},ach:{},owned:["wood-oak","accent-classic","ribbon-gold","frame-none","bg-ambient","bg-grey"],eq:{wood:"wood-oak",accent:"accent-classic",ribbon:"ribbon-gold",frame:"frame-none",postbg:"bg-ambient"},freezes:0,bookRewards:{},active:null}}
+var R=(function(){try{var o=JSON.parse(localStorage.getItem(RKEY));if(o&&typeof o.xp==="number"){var d=rDefault();for(var k in d)if(!(k in o))o[k]=d[k];["bg-ambient","bg-grey"].forEach(function(x){if(o.owned.indexOf(x)<0)o.owned.push(x)});if(!o.eq.postbg)o.eq.postbg="bg-ambient";return o}}catch(e){}return rDefault()})();
 function rSave(){try{localStorage.setItem(RKEY,JSON.stringify(R))}catch(e){}drawWallet();scheduleStats()}
 function today(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function dayDiff(a,b){return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5)}
@@ -1058,7 +1073,7 @@ var ACH=[
   ["level10","Seasoned reader","Reach level 10",0,0,2,function(){return levelOf(R.xp)>=10}],
   ["checkin7","Regular","Complete a 7-day check-in",0,20,0,function(){return R.checkin.day>=7||!!R.ach.checkin7}],
   ["social","Book clubber","Share your first post to the feed",0,25,0,function(){return !!R.posted}],
-  ["shopper","Treat yourself","Buy your first shop item",0,10,0,function(){return R.owned.length>4}]
+  ["shopper","Treat yourself","Buy your first shop item",0,10,0,function(){return R.owned.some(function(id){var it=shopItem(id);return it&&it.price>0})}]
 ];
 function finCount(){return state.books.filter(function(b){return b.status==="Finished"}).length}
 function checkAchievements(bag){
@@ -1091,6 +1106,15 @@ var SHOP=[
   {id:"frame-rose",kind:"frame",name:"Rose ring",price:500,cur:"gold",v:["rose"]},
   {id:"frame-laurel",kind:"frame",name:"Laurel ring",price:10,cur:"gems",v:["laurel"]},
   {id:"frame-star",kind:"frame",name:"Starlight glow",price:15,cur:"gems",v:["star"]},
+  {id:"bg-ambient",kind:"postbg",name:"Cover glow",price:0,cur:"gold",v:["ambient"]},
+  {id:"bg-grey",kind:"postbg",name:"Plain",price:0,cur:"gold",v:["grey"]},
+  {id:"bg-linen",kind:"postbg",name:"Linen",price:200,cur:"gold",v:["linen"]},
+  {id:"bg-sage",kind:"postbg",name:"Sage garden",price:250,cur:"gold",v:["sage"]},
+  {id:"bg-sunset",kind:"postbg",name:"Sunset",price:300,cur:"gold",v:["sunset"]},
+  {id:"bg-ocean",kind:"postbg",name:"Ocean",price:300,cur:"gold",v:["ocean"]},
+  {id:"bg-blossom",kind:"postbg",name:"Cherry blossom",price:5,cur:"gems",v:["blossom"]},
+  {id:"bg-stars",kind:"postbg",name:"Starry night",price:6,cur:"gems",v:["stars"]},
+  {id:"bg-gold",kind:"postbg",name:"Golden hour",price:8,cur:"gems",v:["gold"]},
   {id:"freeze",kind:"boost",name:"Streak freeze",price:2,cur:"gems",v:[],desc:"Saves your streak if you miss a day (hold up to 3)"}
 ];
 function shopItem(id){for(var i=0;i<SHOP.length;i++)if(SHOP[i].id===id)return SHOP[i]}
@@ -1101,6 +1125,8 @@ function applyCosmetics(){
   if(a.id==="accent-classic"){r.removeProperty("--btn");r.removeProperty("--burgundy")}else{r.setProperty("--btn",a.v[dark?1:0]);r.setProperty("--burgundy",a.v[dark?1:0])}
 }
 function myFrame(){var f=shopItem(R.eq.frame);return f&&f.v[0]||""}
+var POSTBG=["ambient","grey","linen","sunset","ocean","sage","stars","blossom","gold"];
+function myBg(){var f=shopItem(R.eq.postbg||"bg-ambient");return f&&f.v[0]||"ambient"}
 function buy(it){
   if(it.kind==="boost"){if(R.freezes>=3){toast("You can hold up to 3 streak freezes");return}}
   else if(R.owned.indexOf(it.id)>-1){R.eq[it.kind]=it.id;rSave();applyCosmetics();toast("Equipped "+it.name);return true}
@@ -1233,12 +1259,13 @@ function openRewards(tabName){
   function pane(v){tabName=v;
     if(v==="ach")$("rwPane").innerHTML='<div class="achgrid">'+ACH.map(function(a){var g=!!R.ach[a[0]];return '<div class="ach'+(g?' got':'')+'"><span class="medal">'+icon(g?"trophy":"lock",20)+'</span><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span><span class="rw">'+(a[4]?'<i class="coin"></i>'+a[4]:'')+(a[5]?'<i class="gem"></i>'+a[5]:'')+'</span></div>'}).join("")+'</div>';
     else{
-      var groups=[["wood","Bookshelf wood"],["accent","App colour"],["ribbon","Bookmark ribbon"],["frame","Profile frame"],["boost","Boosts"]];
+      var groups=[["postbg","Post background"],["wood","Bookshelf wood"],["accent","App colour"],["ribbon","Bookmark ribbon"],["frame","Profile frame"],["boost","Boosts"]];
       $("rwPane").innerHTML=groups.map(function(g){return '<h3 class="sec">'+g[1]+'</h3><div class="shopgrid">'+SHOP.filter(function(it){return it.kind===g[0]}).map(function(it){
         var own=R.owned.indexOf(it.id)>-1,eq=R.eq[it.kind]===it.id,sw;
         if(it.kind==="wood")sw='background:linear-gradient(transparent 62%,'+it.v[0]+' 62%,'+it.v[1]+')';
         else if(it.kind==="accent")sw='background:'+it.v[0];
         else if(it.kind==="ribbon")sw='background:var(--slot)';else sw='background:var(--slot)';
+        if(it.kind==="postbg")return '<div class="item"><div class="sw2 pimg bg-'+it.v[0]+'" style="min-height:0;padding:0;'+(it.v[0]==="ambient"?'--cv:linear-gradient(135deg,#C46A5A,#5E7A5A,#2F6F86)':'')+'"><span style="position:relative;z-index:1;display:block;width:30px;height:44px;border-radius:3px;background:var(--card);box-shadow:0 6px 14px rgba(0,0,0,.3)"></span></div><b>'+esc(it.name)+'</b>'+(it.v[0]==="ambient"?'<span class="note" style="font-size:.75rem">Soft glow in each book\'s own colours</span>':'')+(R.eq.postbg===it.id?'<button class="buy eq" disabled>Equipped</button>':R.owned.indexOf(it.id)>-1?'<button class="buy own" data-buy="'+it.id+'">Equip</button>':'<button class="buy" data-buy="'+it.id+'">'+priceHTML(it)+'</button>')+'</div>';
         var inner=it.kind==="ribbon"?'<i style="position:absolute;left:50%;top:0;width:16px;height:44px;margin-left:-8px;background:'+it.v[0]+';clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)"></i>':it.kind==="frame"?'<span style="position:absolute;inset:0;display:grid;place-items:center">'+avatarHTML({avatar:(meCache&&meCache.avatar)||"book",color:(meCache&&meCache.color)||0,frame:it.v[0]},"sm")+'</span>':it.kind==="boost"?'<span style="position:absolute;inset:0;display:grid;place-items:center;color:#4FB6E8">'+icon("snow",30)+'</span>':'';
         var btn=it.kind==="boost"?'<button class="buy" data-buy="'+it.id+'">'+priceHTML(it)+'</button>':eq?'<button class="buy eq" disabled>Equipped</button>':own?'<button class="buy own" data-buy="'+it.id+'">Equip</button>':'<button class="buy" data-buy="'+it.id+'">'+priceHTML(it)+'</button>';
         return '<div class="item"><div class="sw2" style="'+sw+'">'+inner+'</div><b>'+esc(it.name)+'</b>'+(it.desc?'<span class="note" style="font-size:.75rem">'+esc(it.desc)+(it.kind==="boost"?' · you have '+R.freezes:'')+'</span>':'')+btn+'</div>'}).join("")+'</div>'}).join("")+
@@ -1254,10 +1281,10 @@ $("walletBtn").onclick=function(){openRewards()};
 /* ---- share level, badges and frame on your community profile ---- */
 var statsTimer=null;
 function scheduleStats(){if(!session())return;clearTimeout(statsTimer);statsTimer=setTimeout(function(){
-  api("PATCH","/stats",{level:levelOf(R.xp),xp:R.xp,minutes:R.totalMin,streak:R.streak.count,badges:Object.keys(R.ach),frame:myFrame()}).catch(function(){})},3000)}
+  api("PATCH","/stats",{level:levelOf(R.xp),xp:R.xp,minutes:R.totalMin,streak:R.streak.count,badges:Object.keys(R.ach),frame:myFrame(),bg:myBg()}).catch(function(){})},3000)}
 
 /* ---------- update banner: Home Screen apps can hold on to an old copy ---------- */
-var BUILD="2026-11-04.3", updShown=false;
+var BUILD="2026-11-04.4", updShown=false;
 function checkForUpdate(){
   if(updShown||location.protocol==="file:")return;
   fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){

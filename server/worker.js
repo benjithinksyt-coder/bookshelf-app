@@ -70,6 +70,7 @@ async function ensureSchema(db) {
     "CREATE TABLE IF NOT EXISTS reports (reporter INTEGER NOT NULL, kind TEXT NOT NULL, target INTEGER NOT NULL, reason TEXT, created INTEGER, PRIMARY KEY (reporter, kind, target))",
   ];
   await db.batch(s.map(q => db.prepare(q)));
+  try { await db.prepare("ALTER TABLE stats ADD COLUMN bg TEXT DEFAULT ''").run(); } catch {} // added later; fine if it already exists
   schemaReady = true;
 }
 
@@ -106,12 +107,13 @@ async function recentCount(db, table, userId) {
 /* posts come back with author + counts + liked flag */
 const POST_COLS = `p.id, p.kind, p.title, p.author, p.cover, p.rating, p.body, p.created,
   u.username, u.name, u.avatar, u.color,
+  (SELECT frame FROM stats s WHERE s.user_id=p.user_id) AS frame, (SELECT bg FROM stats s2 WHERE s2.user_id=p.user_id) AS bg,
   (SELECT COUNT(*) FROM likes l WHERE l.post_id=p.id) AS likes,
   (SELECT COUNT(*) FROM comments c WHERE c.post_id=p.id AND c.hidden=0) AS comments,
   EXISTS(SELECT 1 FROM likes l2 WHERE l2.post_id=p.id AND l2.user_id=?) AS liked`;
 const NOT_BLOCKED = `NOT EXISTS (SELECT 1 FROM blocks b WHERE (b.blocker=? AND b.blocked=p.user_id) OR (b.blocker=p.user_id AND b.blocked=?))`;
 const shapePost = r => ({ id: r.id, kind: r.kind, title: r.title, author: r.author, cover: r.cover, rating: r.rating || 0, body: r.body || "", created: r.created,
-  user: { username: r.username, name: r.name || r.username, avatar: r.avatar || "", color: r.color || 0 }, likes: r.likes, comments: r.comments, liked: !!r.liked });
+  user: { username: r.username, name: r.name || r.username, avatar: r.avatar || "", color: r.color || 0, frame: r.frame || "", bg: r.bg || "" }, likes: r.likes, comments: r.comments, liked: !!r.liked });
 
 async function postVisible(db, me, postId) {
   const p = await db.prepare("SELECT p.*, u.private FROM posts p JOIN users u ON u.id=p.user_id WHERE p.id=? AND p.hidden=0").bind(postId).first();
@@ -238,9 +240,10 @@ async function route(req, env, origin) {
   if (seg[1] === "stats" && m === "PATCH") {
     const badges = (Array.isArray(body.badges) ? body.badges : []).map(b => clean(b, 20)).filter(b => /^[a-z0-9_]+$/.test(b)).slice(0, 60).join(",");
     const frame = ["", "gold", "rose", "laurel", "star"].includes(body.frame) ? body.frame : "";
+    const bg = ["", "ambient", "grey", "linen", "sunset", "ocean", "sage", "stars", "blossom", "gold"].includes(body.bg) ? body.bg : "";
     const n = (v, max) => Math.max(0, Math.min(max, parseInt(v, 10) || 0));
-    await db.prepare("INSERT OR REPLACE INTO stats (user_id, level, xp, minutes, streak, badges, frame, updated) VALUES (?,?,?,?,?,?,?,?)")
-      .bind(me.id, Math.max(1, n(body.level, 999)), n(body.xp, 1e9), n(body.minutes, 1e7), n(body.streak, 10000), badges, frame, now()).run();
+    await db.prepare("INSERT OR REPLACE INTO stats (user_id, level, xp, minutes, streak, badges, frame, bg, updated) VALUES (?,?,?,?,?,?,?,?,?)")
+      .bind(me.id, Math.max(1, n(body.level, 999)), n(body.xp, 1e9), n(body.minutes, 1e7), n(body.streak, 10000), badges, frame, bg, now()).run();
     return json({ ok: true }, origin);
   }
 
