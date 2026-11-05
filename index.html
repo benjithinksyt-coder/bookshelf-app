@@ -534,10 +534,11 @@ function openSettings(){
     '<div class="two"><div class="field"><label for="sYear">Year</label><input id="sYear" inputmode="numeric" value="'+state.year+'"></div><div class="field"><label for="sGoal">Reading goal</label><input id="sGoal" inputmode="numeric" value="'+state.goal+'"></div></div>'+
     '<div class="field"><label>Back up your books</label><p class="note" style="margin:0 0 8px">Your books are saved on this phone, in this browser. Download a backup now and then, and use it to move your shelf to a new phone.</p><div class="actions" style="margin:0"><button type="button" class="btn ghost" id="expBtn">Download backup</button><label class="btn ghost" style="text-align:center" for="impFile">Restore backup</label><input type="file" id="impFile" accept="application/json,.json" hidden></div></div>'+
     '<div class="field"><label>Start fresh</label><p class="note" style="margin:0 0 8px">Delete every book and start a new shelf.</p><div class="actions" style="margin:0"><button type="button" class="btn danger" id="clrAll" style="flex:1;border:1px solid var(--line);border-radius:14px">Clear all books</button></div></div>'+
-    '<p class="note">Add to your home screen: in Safari tap Share, then Add to Home Screen. In Chrome tap ⋮, then Add to Home screen.</p>'+
+    '<div class="field"><label>Home Screen</label><button class="btn ghost" id="homeBtn" type="button" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>Share to Home Screen</button><p class="note" style="margin:6px 0 0">Opens The Book Club full screen like a real app, one tap from your Home Screen.</p></div>'+
     '<p class="note">Covers and book details come from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>.</p>'+
     '<div class="actions"><button type="button" class="btn primary" id="sSave">Done</button></div>');
   $("sTheme").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;setTheme(v);[].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",c.getAttribute("data-v")===v)})};
+  $("homeBtn").onclick=function(){showInstall()};
   $("sSave").onclick=function(){state.year=parseInt($("sYear").value,10)||thisYear;state.goal=Math.max(1,parseInt($("sGoal").value,10)||24);save();closeSheet();render()};
   $("expBtn").onclick=function(){var blob=new Blob([JSON.stringify(state,null,1)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-bookshelf-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);toast("Backup downloaded")};
   $("impFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var s=JSON.parse(r.result);if(!s.books)throw 0;state=s;save();closeSheet();render();toast("Shelf restored")}catch(e){toast("That file isn't a bookshelf backup")}};r.readAsText(f)};
@@ -701,9 +702,9 @@ var SOCIAL_ERR={username_taken:"That username is taken. Try another.",bad_userna
 function errMsg(j){return SOCIAL_ERR[j&&j.reason]||"Something went wrong. Try again."}
 function avatarHTML(u,cls){var a=u.avatar||(u.name||u.username||"?").charAt(0).toUpperCase();return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+'">'+esc(a)+'</span>'}
 function ago(ts){var s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return s+"s";var m=Math.round(s/60);if(m<60)return m+"m";var h=Math.round(m/60);if(h<24)return h+"h";var d=Math.round(h/24);if(d<7)return d+"d";return new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
-function quietSignIn(){var l=getLic();if(!l||!l.key||session())return;api("POST","/signup",{key:l.key}).then(function(j){if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true)}})}
+function quietSignIn(){var l=getLic();if(!l||!l.key||session())return;api("POST","/signup",{key:l.key}).then(function(j){if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true)}}).catch(function(){})}
 function scheduleSync(now){if(!session())return;clearTimeout(syncTimer);syncTimer=setTimeout(function(){
-  api("PUT","/sync",{books:state.books.map(function(b){return {id:b.id,title:b.title,author:b.author,cover:b.cover,status:b.status,rating:b.rating,genre:b.genre,pages:b.pages,end:b.end}})})},now?50:2500)}
+  api("PUT","/sync",{books:state.books.map(function(b){return {id:b.id,title:b.title,author:b.author,cover:b.cover,status:b.status,rating:b.rating,genre:b.genre,pages:b.pages,end:b.end}})}).catch(function(){})},now?50:2500)}
 window.__scheduleSync=function(){scheduleSync(false)};
 function shareBook(b,caption){
   var kind={Finished:"finished",Reading:"started",TBR:"tbr",DNF:"review"}[b.status]||"review";
@@ -881,6 +882,12 @@ var isAndroid=/android/i.test(UA);
 var isStandalone=navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
 var deferredInstall=null;
 addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredInstall=e;$("installBtn").hidden=false});
+function showInstall(){
+  if(isStandalone){toast("You're already using the Home Screen app ✓");return}
+  if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.then(function(){deferredInstall=null;$("installBtn").hidden=true});return}
+  $("iosSteps").hidden=isAndroid;$("droidSteps").hidden=!isAndroid;   // computers see the iPhone steps
+  $("install").hidden=false;
+}
 function maybeInstallPrompt(){
   if(isStandalone||!(isIOS||isAndroid))return;
   var seen=false;try{seen=sessionStorage.getItem("bookshelf-install-seen")==="1"}catch(e){}
