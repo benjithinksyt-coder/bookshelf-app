@@ -215,18 +215,22 @@ async function route(req, env, origin) {
     return json({ ok: true }, origin);
   }
 
-  // ---- shelf sync: the app sends its whole library ----
-  if (seg[1] === "sync" && m === "PUT") {
-    const list = Array.isArray(body.books) ? body.books.slice(0, 2000) : [];
-    const stmts = [db.prepare("DELETE FROM books WHERE user_id=?").bind(me.id)];
-    for (const b of list) {
+  // ---- shelf sync ----
+  // PUT  {books:[...]}            → replace the whole library (first sync on a device)
+  // PATCH {upsert:[...], remove:[ids]} → only what changed (every sync after that; far fewer database writes)
+  if (seg[1] === "sync" && (m === "PUT" || m === "PATCH")) {
+    const upsert = (Array.isArray(m === "PUT" ? body.books : body.upsert) ? (m === "PUT" ? body.books : body.upsert) : []).slice(0, 2000);
+    const remove = m === "PATCH" && Array.isArray(body.remove) ? body.remove.slice(0, 2000) : [];
+    const stmts = m === "PUT" ? [db.prepare("DELETE FROM books WHERE user_id=?").bind(me.id)] : [];
+    for (const id of remove) stmts.push(db.prepare("DELETE FROM books WHERE user_id=? AND bid=?").bind(me.id, clean(id, 40)));
+    for (const b of upsert) {
       const st = ["Reading", "Finished", "TBR", "DNF"].includes(b.status) ? b.status : "TBR";
       stmts.push(db.prepare("INSERT OR REPLACE INTO books (user_id, bid, title, author, cover, status, rating, genre, pages, endd) VALUES (?,?,?,?,?,?,?,?,?,?)")
         .bind(me.id, clean(b.id, 40) || randomToken().slice(0, 12), clean(b.title, 200), clean(b.author, 120), okCover(b.cover) ? (b.cover || "") : "",
           st, Math.max(0, Math.min(5, parseInt(b.rating, 10) || 0)), clean(b.genre, 30), Math.max(0, Math.min(20000, parseInt(b.pages, 10) || 0)), clean(b.end, 10)));
     }
     for (let i = 0; i < stmts.length; i += 100) await db.batch(stmts.slice(i, i + 100));
-    return json({ ok: true, count: list.length }, origin);
+    return json({ ok: true, count: upsert.length, removed: remove.length }, origin);
   }
 
   // ---- feed ----

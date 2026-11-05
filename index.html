@@ -703,8 +703,24 @@ function errMsg(j){return SOCIAL_ERR[j&&j.reason]||"Something went wrong. Try ag
 function avatarHTML(u,cls){var a=u.avatar||(u.name||u.username||"?").charAt(0).toUpperCase();return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+'">'+esc(a)+'</span>'}
 function ago(ts){var s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return s+"s";var m=Math.round(s/60);if(m<60)return m+"m";var h=Math.round(m/60);if(h<24)return h+"h";var d=Math.round(h/24);if(d<7)return d+"d";return new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
 function quietSignIn(){var l=getLic();if(!l||!l.key||session())return;api("POST","/signup",{key:l.key}).then(function(j){if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true)}}).catch(function(){})}
+/* sync only what changed: remember a fingerprint of each book we last sent */
+var SYKEY="bookshelf-synced-v1";
+function syncRow(b){return {id:b.id,title:b.title,author:b.author,cover:b.cover,status:b.status,rating:b.rating,genre:b.genre,pages:b.pages,end:b.end}}
+function getSynced(){try{var o=JSON.parse(localStorage.getItem(SYKEY));return o&&o.user===(meCache&&meCache.username)?o:null}catch(e){return null}}
+function setSynced(map){try{if(map)localStorage.setItem(SYKEY,JSON.stringify({user:meCache&&meCache.username,map:map}));else localStorage.removeItem(SYKEY)}catch(e){}}
+function doSync(){
+  if(!session()||!meCache)return;
+  var cur={},rows={};state.books.forEach(function(b){var r=syncRow(b);rows[b.id]=r;cur[b.id]=JSON.stringify(r)});
+  var last=getSynced();
+  if(!last){api("PUT","/sync",{books:Object.keys(rows).map(function(k){return rows[k]})}).then(function(j){if(j.ok)setSynced(cur)}).catch(function(){});return}
+  var up=[],rm=[];
+  Object.keys(cur).forEach(function(k){if(last.map[k]!==cur[k])up.push(rows[k])});
+  Object.keys(last.map).forEach(function(k){if(!(k in cur))rm.push(k)});
+  if(!up.length&&!rm.length)return;                       // nothing changed: no request at all
+  api("PATCH","/sync",{upsert:up,remove:rm}).then(function(j){if(j.ok)setSynced(cur)}).catch(function(){});
+}
 function scheduleSync(now){if(!session())return;clearTimeout(syncTimer);syncTimer=setTimeout(function(){
-  api("PUT","/sync",{books:state.books.map(function(b){return {id:b.id,title:b.title,author:b.author,cover:b.cover,status:b.status,rating:b.rating,genre:b.genre,pages:b.pages,end:b.end}})}).catch(function(){})},now?50:2500)}
+  if(meCache)doSync();else api("GET","/me").then(function(j){if(j.ok){meCache=j.me;doSync()}}).catch(function(){})},now?50:2500)}
 window.__scheduleSync=function(){scheduleSync(false)};
 function shareBook(b,caption){
   var kind={Finished:"finished",Reading:"started",TBR:"tbr",DNF:"review"}[b.status]||"review";
@@ -871,8 +887,8 @@ function openEditProfile(){
   $("reqList").onclick=function(e){var a=e.target.getAttribute("data-acc"),d=e.target.getAttribute("data-dec");if(!a&&!d)return;
     api("POST","/requests/"+encodeURIComponent(a||d),{accept:!!a}).then(function(){e.target.closest(".urow").remove();if(meCache)meCache.requests=Math.max(0,(meCache.requests||1)-1);$("feedDot").hidden=!(meCache&&meCache.requests)})};
   $("epSave").onclick=function(){api("PATCH","/me",{name:$("epName").value,bio:$("epBio").value,avatar:st.avatar,color:st.color,private:$("epPriv").checked}).then(function(j){if(j.ok){meCache=Object.assign(meCache||{},j.me);toast("Profile saved");openProfile(j.me.username);if(tab==="feed")openFeed()}else toast(errMsg(j))})};
-  $("epOut").onclick=function(){api("POST","/logout").then(function(){setSession("");meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Signed out")})};
-  var armed=false;$("epDel").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to delete";return}api("DELETE","/account").then(function(j){if(j.ok){setSession("");meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Account deleted")}else toast(errMsg(j))})};
+  $("epOut").onclick=function(){api("POST","/logout").then(function(){setSession("");setSynced(null);meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Signed out")})};
+  var armed=false;$("epDel").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to delete";return}api("DELETE","/account").then(function(j){if(j.ok){setSession("");setSynced(null);meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Account deleted")}else toast(errMsg(j))})};
 }
 
 /* ---------- add to home screen ---------- */
