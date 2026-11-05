@@ -63,6 +63,11 @@ h3.sec span{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weig
 .spine span{writing-mode:vertical-rl;transform:rotate(180deg);font-weight:800;font-size:.72rem;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
 .spine::before,.spine::after{content:"";position:absolute;left:4px;right:4px;height:2px;background:rgba(255,255,255,.35)}
 .spine::before{top:10px}.spine::after{bottom:10px}
+.spine.art{background-size:100% 100%,auto 230%;background-position:center,center 45%;background-repeat:no-repeat}
+.spine.art span{text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 8px rgba(0,0,0,.6)}
+.spine.art::before,.spine.art::after{background:rgba(255,255,255,.55)}
+.spine.reading{transform:translateY(-6px);box-shadow:inset -3px 0 0 rgba(0,0,0,.12),0 6px 0 -2px var(--gold)}
+.spine .ribbon{position:absolute;top:-4px;left:50%;width:9px;height:26px;margin-left:-4.5px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);z-index:2}
 .spine.empty{background:var(--slot);box-shadow:none;border:1.5px dashed var(--line)}
 .spine.empty::before,.spine.empty::after{display:none}
 .legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.78rem;color:var(--muted);margin-top:10px}
@@ -357,21 +362,25 @@ function render(){
     return '<button class="card now bookbtn" style="flex-direction:row;display:grid;width:100%" data-open="'+b.id+'"><div>'+coverHTML(b)+'</div><div style="min-width:0"><div class="title">'+esc(b.title)+'</div><div class="author">'+esc(b.author)+'</div><div class="note" style="margin-top:6px">'+(b.page?("Page "+b.page+" of "+b.pages):(d?("Started "+d+" day"+(d>1?"s":"")+" ago"):"Just started"))+'</div><div class="bar"><b style="width:'+prog+'%"></b></div></div></button>';
   }).join(""):'<div class="card note">Nothing on the go yet. Tap <b>Add book</b>, or find one in the <b>Store</b>.</div>';
   // shelf
-  var slots=Math.max(goal,fin.length), perRow=Math.max(8,Math.floor((Math.min(innerWidth,720)-60)/32)), rows=[], html="";
+  // finished books first, then the ones you're reading now (marked with a bookmark)
+  var onShelf=fin.concat(state.books.filter(function(b){return b.status==="Reading"}));
+  var slots=Math.max(goal,onShelf.length), perRow=Math.max(8,Math.floor((Math.min(innerWidth,720)-60)/32)), rows=[], html="";
   for(var i=0;i<slots;i+=perRow){rows.push(i)}
   rows.forEach(function(start){
     html+='<div class="row">';
     for(var k=start;k<Math.min(start+perRow,slots);k++){
-      var b=fin[k];
-      if(b){var h=Math.round(118+Math.min(1,(+b.pages||250)/600)*46), w=b.pages>450?32:b.pages<200?24:28;
-        html+='<button class="spine" style="height:'+h+'px;width:'+w+'px;background:'+gcolor(b.genre)+'" data-open="'+b.id+'" aria-label="'+esc(b.title)+'"><span>'+esc(b.title)+'</span></button>';}
+      var b=onShelf[k];
+      if(b){var h=Math.round(118+Math.min(1,(+b.pages||250)/600)*46), w=b.pages>450?32:b.pages<200?24:28, rd=b.status==="Reading";
+        // the spine uses a strip of the book's real cover (its colours and art), falling back to the genre colour
+        var bg='background-color:'+gcolor(b.genre)+(b.cover?';background-image:linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,.16) 35%,rgba(0,0,0,.34)),url(&quot;'+esc(b.cover)+'&quot;)':'');
+        html+='<button class="spine'+(b.cover?' art':'')+(rd?' reading':'')+'" style="height:'+h+'px;width:'+w+'px;'+bg+'" data-open="'+b.id+'" aria-label="'+esc(b.title)+(rd?' (currently reading)':'')+'"><span>'+esc(b.title)+'</span>'+(rd?'<i class="ribbon" aria-hidden="true"></i>':'')+'</button>';}
       else html+='<div class="spine empty" style="height:130px;width:26px" aria-hidden="true"></div>';
     }
     html+='</div><div class="board"></div>';
   });
   $("shelf").innerHTML=html;
   var used={};fin.forEach(function(b){used[b.genre]=(used[b.genre]||0)+1});
-  $("legend").innerHTML=Object.keys(used).map(function(g){return '<span><i style="background:'+gcolor(g)+'"></i>'+esc(g)+'</span>'}).join("");
+  $("legend").innerHTML=Object.keys(used).map(function(g){return '<span><i style="background:'+gcolor(g)+'"></i>'+esc(g)+'</span>'}).join("")+(onShelf.length>fin.length?'<span><i style="background:var(--gold)"></i>Reading now</span>':'');
   renderLibrary(); renderStats(); bindOpen();
 }
 function avg(list){var r=list.filter(function(b){return b.rating});return r.length?r.reduce(function(s,b){return s+ +b.rating},0)/r.length:0}
