@@ -112,7 +112,7 @@ h3.sec span{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weig
 .hbar .track b{display:block;height:100%;border-radius:999px}
 .hbar span:last-child{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
 /* tab bar + fab */
-nav.tabs{position:relative;flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20}
+nav.tabs{position:relative;flex:0 0 auto;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:20}
 nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:800;color:var(--muted);padding:6px}
 nav.tabs button[aria-current="page"]{color:var(--burgundy)}
 nav.tabs svg{width:24px;height:24px}
@@ -152,6 +152,62 @@ nav.tabs svg{width:24px;height:24px}
 .note{font-size:.82rem;color:var(--muted)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-weight:700;z-index:60;font-size:.9rem}
 .trialpill{position:fixed;left:max(16px,calc(env(safe-area-inset-left,0px) + 16px));bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:21;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:.8rem;border-radius:999px;padding:9px 13px;box-shadow:var(--shadow)}
+/* community */
+.tabdot{position:absolute;top:4px;right:calc(50% - 18px);width:9px;height:9px;border-radius:50%;background:var(--btn)}
+nav.tabs button{position:relative}
+.av{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;color:#fff;font-weight:800;font-size:1.25rem;flex:0 0 auto;line-height:1}
+.av.big{width:84px;height:84px;font-size:2.2rem}.av.sm{width:30px;height:30px;font-size:.85rem}
+.c0{background:#7A2E3A}.c1{background:#5E7A5A}.c2{background:#2F6F86}.c3{background:#B5546A}.c4{background:#8B6446}.c5{background:#6A5ACD}.c6{background:#C0613C}.c7{background:#3A3A3A}
+.ftop{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ftop .segs{flex:1}
+.ftop .iconbtn{flex:0 0 auto}
+.post{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:14px;overflow:hidden}
+.phead{display:flex;align-items:center;gap:10px;padding:12px 12px 8px}
+.phead .who{flex:1;min-width:0;border:0;background:none;padding:0;text-align:left;display:flex;align-items:center;gap:10px;color:var(--ink)}
+.phead .who b{display:block;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phead .who span:not(.av){display:block;font-size:.78rem;color:var(--muted)}
+.phead .who .av{font-size:1.25rem}
+.more{border:0;background:none;color:var(--muted);font-size:1.3rem;padding:4px 8px;line-height:1}
+.pimg{background:var(--slot);display:flex;justify-content:center;padding:18px 0}
+.pimg .cover,.pimg .fakecover{width:52%;max-width:240px;box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.pact{display:flex;align-items:center;gap:4px;padding:8px 8px 0}
+.pact button{border:0;background:none;display:flex;align-items:center;gap:5px;font-weight:800;font-size:.9rem;color:var(--ink);padding:6px 8px}
+.pact button.on{color:#D2395A}
+.pact .sp{flex:1}
+.ptext{padding:4px 16px 14px;line-height:1.45;font-size:.95rem}
+.ptext .what{color:var(--muted)}
+.ptext .bt{font-family:var(--display);font-weight:600;font-style:italic}
+.pbody{margin-top:4px;white-space:pre-line;overflow-wrap:anywhere}
+.prof{text-align:center;padding:6px 0 4px}
+.prof h3{font-family:var(--display);font-size:1.4rem;margin:10px 0 0}
+.prof .handle{color:var(--muted);font-size:.9rem}
+.prof .bio{margin:10px auto 0;max-width:340px;line-height:1.45;white-space:pre-line;overflow-wrap:anywhere}
+.counts{display:flex;justify-content:center;gap:26px;margin:16px 0}
+.counts div{display:flex;flex-direction:column;font-size:.78rem;color:var(--muted);font-weight:700}
+.counts b{font-family:var(--display);font-size:1.3rem;color:var(--ink)}
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.pgrid .cell{position:relative;border:0;background:none;padding:0}
+.pgrid .cell .cover,.pgrid .cell .fakecover{width:100%;border-radius:4px;box-shadow:none}
+.pgrid .cell i{position:absolute;top:5px;left:5px;width:8px;height:18px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+.pgrid .cell em{position:absolute;bottom:4px;right:4px;font-style:normal;font-size:.68rem;font-weight:800;background:rgba(0,0,0,.6);color:#fff;border-radius:5px;padding:1px 5px}
+.ulist{display:flex;flex-direction:column;gap:8px}
+.urow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left;color:var(--ink);width:100%}
+.urow .n{flex:1;min-width:0}.urow .n b{display:block}.urow .n span{font-size:.8rem;color:var(--muted)}
+.crow{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.crow .ct{flex:1;min-width:0;line-height:1.4;overflow-wrap:anywhere}.crow .ct span{font-size:.75rem;color:var(--muted)}
+.cbar{position:sticky;bottom:0;background:var(--paper);display:flex;gap:8px;padding:10px 0 4px}
+.cbar input{flex:1;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:12px 14px}
+.cbar button{border:0;background:var(--btn);color:#fff;font-weight:800;border-radius:999px;padding:0 16px}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick button{border:2px solid transparent;background:var(--card);border-radius:12px;width:44px;height:44px;font-size:1.3rem;display:grid;place-items:center;padding:0}
+.pick button[aria-pressed="true"]{border-color:var(--btn)}
+.pick .sw{width:34px;height:34px;border-radius:50%}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:700}
+.toggle input{width:22px;height:22px;accent-color:var(--btn)}
+.join{text-align:center;padding:26px 18px}
+.join h3{font-family:var(--display);font-size:1.35rem;margin:10px 0 6px}
+.join p{color:var(--muted);margin:0 0 16px;line-height:1.45}
+.menu{display:flex;flex-direction:column;gap:8px}
 /* store */
 .srow{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px}
 .srow .cover,.srow .fakecover{width:64px}
@@ -227,6 +283,11 @@ nav.tabs svg{width:24px;height:24px}
     <div class="grid" id="libGrid"></div>
   </main>
 
+  <main id="view-feed" hidden>
+    <div id="feedTop"></div>
+    <div id="feedList"></div>
+  </main>
+
   <main id="view-store" hidden>
     <input class="search" id="storeSearch" type="search" placeholder="Search any book or author" aria-label="Search books" autocomplete="off">
     <div class="filters" id="storeChips" role="group" aria-label="Browse"></div>
@@ -250,6 +311,7 @@ nav.tabs svg{width:24px;height:24px}
 <nav class="tabs" aria-label="Sections">
   <button data-tab="shelf" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20h16M6 20V6h3v14M10 20V4h3v16M15 20l-1-12 3-.5 2 12.5"/></svg>Shelf</button>
   <button data-tab="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="9" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Library</button>
+  <button data-tab="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/></svg>Feed<b class="tabdot" id="feedDot" hidden></b></button>
   <button data-tab="store"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.5 12a2 2 0 0 1-2 1.8h-9a2 2 0 0 1-2-1.8z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/></svg>Store</button>
   <button data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>Stats</button>
 </nav>
@@ -314,7 +376,7 @@ var tab="shelf", filter="All";
 function sample(){return {year:thisYear,goal:24,books:[]}}   // every new shelf starts empty
 function uid(){return Math.random().toString(36).slice(2,10)}
 function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.books){s.books=s.books.filter(function(b){return !b.sample});return s}}catch(e){}return sample()}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast("Couldn't save on this device. Use Backup to keep a copy.")}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast("Couldn't save on this device. Use Backup to keep a copy.")}if(window.__scheduleSync)window.__scheduleSync()}
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function gcolor(g){for(var i=0;i<GENRES.length;i++)if(GENRES[i][0]===g)return GENRES[i][1];return "#8C7B6B"}
@@ -429,11 +491,13 @@ function openEditor(id){
     '<div class="two"><div class="field"><label for="fStart">Started</label><input id="fStart" type="date" value="'+esc(b.start)+'"></div><div class="field"><label for="fEnd">Finished</label><input id="fEnd" type="date" value="'+esc(b.end)+'"></div></div>'+
     '<div class="field"><label>Rating</label><div class="ratingpick" id="rate">'+[1,2,3,4,5].map(function(n){return '<button type="button" data-v="'+n+'" aria-label="'+n+' stars" class="'+(n<=b.rating?"on":"")+'">★</button>'}).join("")+'</div></div>'+
     '<div class="field"><label for="fNotes">Notes</label><textarea id="fNotes" rows="3" placeholder="Favorite quote, thoughts, who recommended it">'+esc(b.notes)+'</textarea></div>'+
+    (session()?'<div class="field" id="shareRow"><label class="toggle" for="fShare" style="text-transform:none;letter-spacing:0;font-size:1rem;color:var(--ink)"><input type="checkbox" id="fShare"'+(isNew&&(b.status==="Reading"||b.status==="Finished")?' checked':'')+'> Share to my feed</label><textarea id="fCaption" rows="2" maxlength="500" placeholder="Say something about it (optional)"></textarea></div>':'')+
     (isNew?'':'<p style="margin:0 0 12px"><a class="sbtn amz" href="'+amazonUrl(b.title,b.author)+'" target="_blank" rel="noopener sponsored">See it on Amazon ↗</a></p>')+'<div class="actions">'+(isNew?'':'<button type="button" class="btn danger" id="delBtn">Delete</button>')+'<button type="button" class="btn ghost" id="cancelBtn">Cancel</button><button type="button" class="btn primary" id="saveBtn">'+(isNew?"Add to shelf":"Save")+'</button></div>'
   );
   var status=b.status, rating=+b.rating||0, cover=b.cover;
   $("sStatus").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;status=v;[].forEach.call(this.children,function(c){c.setAttribute("aria-pressed",c.getAttribute("data-v")===v)});
-    if(v==="Finished"&&!$("fEnd").value)$("fEnd").value=new Date().toISOString().slice(0,10);};
+    if(v==="Finished"&&!$("fEnd").value)$("fEnd").value=new Date().toISOString().slice(0,10);
+    if($("fShare")&&v!==b.status&&(v==="Finished"||v==="Reading"))$("fShare").checked=true;};
   $("rate").onclick=function(e){var v=+e.target.getAttribute("data-v");if(!v)return;rating=(v===rating?0:v);[].forEach.call(this.children,function(c){c.classList.toggle("on",+c.getAttribute("data-v")<=rating)})};
   $("cancelBtn").onclick=closeSheet;
   if($("delBtn")){var armed=false;$("delBtn").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to delete";return}state.books=state.books.filter(function(x){return x.id!==b.id});save();closeSheet();render();toast("Book deleted")}}
@@ -441,7 +505,9 @@ function openEditor(id){
     var t=$("fTitle").value.trim();if(!t){$("fTitle").focus();toast("Add a title first");return}
     var nb={id:b.id,title:t,author:$("fAuthor").value.trim(),genre:$("fGenre").value||"Other",format:$("fFormat").value,pages:parseInt($("fPages").value,10)||"",page:parseInt($("fPage").value,10)||"",status:status,start:$("fStart").value,end:status==="Finished"?($("fEnd").value||new Date().toISOString().slice(0,10)):$("fEnd").value,rating:rating,notes:$("fNotes").value,cover:cover,coverTried:true};
     var i=state.books.findIndex(function(x){return x.id===b.id});if(i>-1)state.books[i]=nb;else state.books.unshift(nb);
+    var share=$("fShare")&&$("fShare").checked, cap=$("fCaption")?$("fCaption").value:"";
     save();closeSheet();render();toast(isNew?"Added to your shelf":"Saved");
+    if(share)shareBook(nb,cap);
     if(isNew&&nb.status==="Finished")setTab("shelf");
   };
   if(isNew){
@@ -479,7 +545,7 @@ function openSettings(){
 }
 
 /* ---------- tabs ---------- */
-function setTab(t){tab=t;if(t==="store"&&!storeLoaded){storeLoaded=true;renderStore();loadStore("chip",storeChip)}["shelf","library","store","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
+function setTab(t){tab=t;$("addBtn").hidden=(t==="feed");if(t==="feed")openFeed();if(t==="store"&&!storeLoaded){storeLoaded=true;renderStore();loadStore("chip",storeChip)}["shelf","library","feed","store","stats"].forEach(function(x){$("view-"+x).hidden=(x!==t)});
   document.querySelectorAll("nav.tabs button").forEach(function(b){if(b.getAttribute("data-tab")===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});$("scroller").scrollTop=0}
 document.querySelectorAll("nav.tabs button").forEach(function(b){b.onclick=function(){setTab(b.getAttribute("data-tab"))}});
 $("filters").onclick=function(e){var v=e.target.getAttribute("data-filter");if(v){filter=v;renderLibrary();bindOpen()}};
@@ -536,7 +602,7 @@ $("lockForm").addEventListener("submit",function(e){
   if(!key){$("lockMsg").textContent="Paste your license key first.";return}
   $("lockBtn").disabled=true;$("lockBtn").textContent="Checking…";$("lockMsg").textContent="";
   callKey("/activate",key).then(function(res){
-    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;$("trialPill").hidden=true;toast("Unlocked. Happy reading!")}
+    if(res&&res.ok){setLic({key:key,checked:Date.now()});$("lock").hidden=true;$("trialPill").hidden=true;toast("Unlocked. Happy reading!");quietSignIn()}
     else $("lockMsg").textContent=REASONS[res&&res.reason]||"That key didn't work. Check it and try again.";
   }).catch(function(){$("lockMsg").textContent="Couldn't connect. Check your internet and try again."})
   .then(function(){$("lockBtn").disabled=false;$("lockBtn").textContent="Unlock"});
@@ -618,6 +684,186 @@ $("storeList").onclick=function(e){
 };
 var storeLoaded=false;
 
+/* ---------- community: profiles, feed, likes, comments ---------- */
+var SKEY="bookshelf-session-v1", meCache=null, feedTab="following", feedPosts=[], feedEnd=false, syncTimer=null;
+var AVATARS=["📚","📖","☕","🌙","🌸","🍂","🕯️","🐈","🦉","🌿","✨","🧸"];
+function session(){try{return localStorage.getItem(SKEY)||""}catch(e){return ""}}
+function setSession(t){try{if(t)localStorage.setItem(SKEY,t);else localStorage.removeItem(SKEY)}catch(e){}}
+function api(method,path,body){
+  var h={"Content-Type":"application/json"};var t=session();if(t)h.Authorization="Bearer "+t;
+  return fetch(CHECK_URL.replace(/\/$/,"")+"/api"+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined})
+    .then(function(r){return r.json().catch(function(){return {ok:false,reason:"server_error"}})})
+    .then(function(j){if(j&&j.reason==="signed_out"){setSession("");meCache=null}return j});
+}
+var SOCIAL_ERR={username_taken:"That username is taken. Try another.",bad_username:"Usernames are 3–20 letters, numbers, dots or underscores.",need_agree:"Please tick the box to agree.",slow_down:"You're posting a lot. Try again in a little while.",try_again:"Couldn't reach the server. Try again in a minute.",database_not_connected:"The community isn't switched on yet.",not_found:"Not found.",disabled:"This key has been turned off."};
+function errMsg(j){return SOCIAL_ERR[j&&j.reason]||"Something went wrong. Try again."}
+function avatarHTML(u,cls){var a=u.avatar||(u.name||u.username||"?").charAt(0).toUpperCase();return '<span class="av c'+((+u.color||0)%8)+(cls?' '+cls:'')+'">'+esc(a)+'</span>'}
+function ago(ts){var s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return s+"s";var m=Math.round(s/60);if(m<60)return m+"m";var h=Math.round(m/60);if(h<24)return h+"h";var d=Math.round(h/24);if(d<7)return d+"d";return new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
+function quietSignIn(){var l=getLic();if(!l||!l.key||session())return;api("POST","/signup",{key:l.key}).then(function(j){if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true)}})}
+function scheduleSync(now){if(!session())return;clearTimeout(syncTimer);syncTimer=setTimeout(function(){
+  api("PUT","/sync",{books:state.books.map(function(b){return {id:b.id,title:b.title,author:b.author,cover:b.cover,status:b.status,rating:b.rating,genre:b.genre,pages:b.pages,end:b.end}})})},now?50:2500)}
+window.__scheduleSync=function(){scheduleSync(false)};
+function shareBook(b,caption){
+  var kind={Finished:"finished",Reading:"started",TBR:"tbr",DNF:"review"}[b.status]||"review";
+  api("POST","/posts",{kind:kind,title:b.title,author:b.author,cover:b.cover,rating:b.status==="Finished"?b.rating:0,body:caption}).then(function(j){
+    if(j.ok){toast("Shared to your feed");feedPosts=[];if(tab==="feed")openFeed()}else toast(errMsg(j))})
+}
+function kindText(k){return {finished:"finished",started:"started reading",tbr:"wants to read",review:"is talking about"}[k]||"shared"}
+function postHTML(p){
+  var fb={id:"p"+p.id,title:p.title,author:p.author,genre:"Other",cover:p.cover};
+  return '<article class="post" data-pid="'+p.id+'"><div class="phead"><button class="who" data-user="'+esc(p.user.username)+'">'+avatarHTML(p.user)+'<span style="min-width:0"><b>'+esc(p.user.name)+'</b><span>@'+esc(p.user.username)+' · '+ago(p.created)+'</span></span></button><button class="more" data-more="'+p.id+'" aria-label="More options">⋯</button></div>'+
+    '<div class="pimg">'+(p.cover?'<img class="cover" src="'+esc(p.cover.replace("-S.jpg","-M.jpg"))+'" alt="Cover of '+esc(p.title)+'" loading="lazy" decoding="async">':fake(fb))+'</div>'+
+    '<div class="pact"><button class="'+(p.liked?'on':'')+'" data-like="'+p.id+'" aria-label="Like">'+(p.liked?'♥':'♡')+' <span>'+p.likes+'</span></button><button data-comments="'+p.id+'" aria-label="Comments">💬 <span>'+p.comments+'</span></button><span class="sp"></span><button data-want="'+p.id+'">+ To read</button></div>'+
+    '<div class="ptext"><b>'+esc(p.user.name)+'</b> <span class="what">'+kindText(p.kind)+'</span> <span class="bt">'+esc(p.title)+'</span>'+(p.author?' <span class="what">by '+esc(p.author)+'</span>':'')+(p.rating?' <span class="stars">'+stars(p.rating)+'</span>':'')+
+    (p.body?'<div class="pbody">'+esc(p.body)+'</div>':'')+'</div></article>';
+}
+function openFeed(){
+  if(isLocked()){$("feedTop").innerHTML="";$("feedList").innerHTML='<div class="card join"><div style="font-size:2.4rem">📚</div><h3>Join the reading community</h3><p>See what other readers are finishing, follow friends, and share your shelf. Unlock with your license key to join.</p><button class="btn primary" id="joinUnlock" type="button">Unlock to join</button></div>';$("joinUnlock").onclick=function(){showLock()};return}
+  if(!session()){
+    $("feedTop").innerHTML="";
+    $("feedList").innerHTML='<div class="card join"><div style="font-size:2.4rem">📚</div><h3>Join the reading community</h3><p>Make a profile to follow other readers, see their shelves, and share what you\'re reading. Your profile is public, and you can make it private anytime.</p><button class="btn primary" id="joinBtn" type="button">Create my profile</button></div>';
+    $("joinBtn").onclick=function(){var l=getLic();this.disabled=true;this.textContent="Checking…";var btn=this;
+      api("POST","/signup",{key:l.key}).then(function(j){btn.disabled=false;btn.textContent="Create my profile";if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true);openFeed()}else if(j.reason==="need_username")openSignup();else toast(errMsg(j))}).catch(function(){btn.disabled=false;btn.textContent="Create my profile";toast("Couldn't connect. Check your internet.")})};
+    return;
+  }
+  $("feedTop").innerHTML='<div class="ftop"><div class="segs" id="feedSegs"><button type="button" data-v="following" aria-pressed="'+(feedTab==="following")+'">Following</button><button type="button" data-v="discover" aria-pressed="'+(feedTab==="discover")+'">Discover</button></div><button class="iconbtn" id="findBtn" aria-label="Find readers"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button><button class="iconbtn" id="meBtn" aria-label="My profile" style="padding:0;overflow:hidden">'+(meCache?avatarHTML(meCache,"sm"):'👤')+'</button></div>';
+  $("feedSegs").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v||v===feedTab)return;feedTab=v;feedPosts=[];openFeed()};
+  $("findBtn").onclick=openFind;
+  $("meBtn").onclick=function(){if(meCache)openProfile(meCache.username)};
+  api("GET","/me").then(function(j){if(j.ok){meCache=j.me;$("meBtn")&&($("meBtn").innerHTML=avatarHTML(meCache,"sm"));$("feedDot").hidden=!j.me.requests}});
+  loadFeed(true);
+}
+function loadFeed(reset){
+  if(reset){feedPosts=[];feedEnd=false;$("feedList").innerHTML='<div class="empty-state">Loading…</div>'}
+  var before=feedPosts.length?feedPosts[feedPosts.length-1].id:"";
+  api("GET","/feed?tab="+feedTab+(before?"&before="+before:"")).then(function(j){
+    if(!j.ok){$("feedList").innerHTML='<div class="empty-state">'+esc(errMsg(j))+'</div>';return}
+    feedPosts=feedPosts.concat(j.posts);feedEnd=j.posts.length<20;drawFeed();
+  }).catch(function(){$("feedList").innerHTML='<div class="empty-state">Couldn\'t load the feed. Check your connection.</div>'});
+}
+function drawFeed(){
+  $("feedList").innerHTML=feedPosts.length?feedPosts.map(postHTML).join("")+(feedEnd?'':'<button class="btn ghost" id="moreFeed" type="button" style="width:100%">Load more</button>')
+    :'<div class="card join"><h3>'+(feedTab==="following"?"Your feed is quiet":"No posts yet")+'</h3><p>'+(feedTab==="following"?"Follow readers from Discover, or share a book you're reading. Open a book and tick “Share to my feed”.":"Be the first: open a book and tick “Share to my feed”.")+'</p>'+(feedTab==="following"?'<button class="btn ghost" id="toDisc" type="button">Browse Discover</button>':'')+'</div>';
+  if($("moreFeed"))$("moreFeed").onclick=function(){loadFeed(false)};
+  if($("toDisc"))$("toDisc").onclick=function(){feedTab="discover";openFeed()};
+}
+function findPost(id){for(var i=0;i<feedPosts.length;i++)if(feedPosts[i].id===id)return feedPosts[i];return (window.__profPosts||[]).find(function(p){return p.id===id})}
+function postClicks(e){
+  var t=e.target.closest("[data-like],[data-comments],[data-want],[data-more],[data-user]");if(!t)return;
+  if(t.hasAttribute("data-user")){openProfile(t.getAttribute("data-user"));return}
+  var id=+(t.getAttribute("data-like")||t.getAttribute("data-comments")||t.getAttribute("data-want")||t.getAttribute("data-more")),p=findPost(id);if(!p)return;
+  if(t.hasAttribute("data-like")){var on=!p.liked;p.liked=on;p.likes+=on?1:-1;t.classList.toggle("on",on);t.innerHTML=(on?'♥':'♡')+' <span>'+p.likes+'</span>';
+    api(on?"POST":"DELETE","/posts/"+id+"/like").then(function(j){if(j.ok){p.likes=j.likes;t.querySelector("span").textContent=j.likes}})}
+  else if(t.hasAttribute("data-comments"))openComments(p);
+  else if(t.hasAttribute("data-want")){if(addToTBR({title:p.title,author_name:[p.author],cover_i:null,subject:[]})){var bk=state.books[0];bk.cover=p.cover||"";save();render()}}
+  else if(t.hasAttribute("data-more"))openPostMenu(p);
+}
+$("feedList").addEventListener("click",postClicks);
+$("sheet").addEventListener("click",function(e){if(e.target.closest(".post"))postClicks(e)});
+function openPostMenu(p){
+  var mine=meCache&&meCache.username===p.user.username;
+  openSheet('<h2>Post options</h2><div class="menu">'+(mine||(meCache&&meCache.admin)?'<button class="btn ghost" id="mDel" type="button">Delete post</button>':'')+(mine?'':'<button class="btn ghost" id="mRep" type="button">Report post</button><button class="btn ghost" id="mBlock" type="button">Block @'+esc(p.user.username)+'</button>')+'<button class="btn ghost" id="mClose" type="button">Cancel</button></div>');
+  $("mClose").onclick=closeSheet;
+  if($("mDel")){var armed=false;$("mDel").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to delete";return}api("DELETE","/posts/"+p.id).then(function(j){if(j.ok){feedPosts=feedPosts.filter(function(x){return x.id!==p.id});closeSheet();drawFeed();toast("Post deleted")}else toast(errMsg(j))})}}
+  if($("mRep"))$("mRep").onclick=function(){openReport("post",p.id)};
+  if($("mBlock"))$("mBlock").onclick=function(){blockUser(p.user.username)};
+}
+function openReport(kind,target){
+  openSheet('<h2>Report</h2><p class="note" style="margin:0 0 12px">Why are you reporting this? Posts with several reports are hidden automatically.</p><div class="menu">'+["Spam","Mean or harassing","Inappropriate","Spoilers without warning","Something else"].map(function(r){return '<button class="btn ghost" type="button" data-r="'+r+'">'+r+'</button>'}).join("")+'</div>');
+  $("sheet").querySelector(".menu").onclick=function(e){var r=e.target.getAttribute("data-r");if(!r)return;api("POST","/report",{kind:kind,target:target,reason:r}).then(function(){closeSheet();toast("Thanks, we got your report")})};
+}
+function blockUser(username){
+  openSheet('<h2>Block @'+esc(username)+'?</h2><p class="note" style="margin:0 0 14px">You won\'t see each other\'s profiles, posts or comments, and any follows between you are removed.</p><div class="actions"><button class="btn ghost" id="bNo" type="button">Cancel</button><button class="btn primary" id="bYes" type="button">Block</button></div>');
+  $("bNo").onclick=closeSheet;$("bYes").onclick=function(){api("POST","/u/"+encodeURIComponent(username)+"/block").then(function(j){closeSheet();if(j.ok){toast("Blocked");feedPosts=[];if(tab==="feed")openFeed()}else toast(errMsg(j))})};
+}
+function openComments(p){
+  openSheet('<h2>Comments</h2><div id="cList"><div class="empty-state">Loading…</div></div><form class="cbar" id="cForm"><input id="cIn" maxlength="300" placeholder="Add a comment…" autocomplete="off"><button type="submit">Post</button></form>');
+  function draw(list){$("cList").innerHTML=list.length?list.map(function(c){return '<div class="crow">'+avatarHTML(c.user,"sm")+'<div class="ct"><b data-user="'+esc(c.user.username)+'">'+esc(c.user.name)+'</b> '+esc(c.body)+'<br><span>'+ago(c.created)+(c.canDelete?' · <a href="#" data-cdel="'+c.id+'">Delete</a>':'')+(c.mine?'':' · <a href="#" data-crep="'+c.id+'">Report</a>')+'</span></div></div>'}).join(""):'<p class="note">No comments yet. Say something nice!</p>'}
+  var list=[];
+  api("GET","/posts/"+p.id+"/comments").then(function(j){list=j.ok?j.comments:[];draw(list)});
+  $("cList").onclick=function(e){var d=e.target.getAttribute("data-cdel"),r=e.target.getAttribute("data-crep"),u=e.target.getAttribute("data-user");
+    if(d){e.preventDefault();api("DELETE","/comments/"+d).then(function(j){if(j.ok){list=list.filter(function(c){return c.id!==+d});p.comments=Math.max(0,p.comments-1);draw(list);drawFeed()}})}
+    if(r){e.preventDefault();openReport("comment",+r)}
+    if(u)openProfile(u)};
+  $("cForm").onsubmit=function(e){e.preventDefault();var v=$("cIn").value.trim();if(!v)return;$("cIn").value="";
+    api("POST","/posts/"+p.id+"/comments",{body:v}).then(function(j){if(j.ok){list.push(j.comment);p.comments++;draw(list);drawFeed()}else toast(errMsg(j))})};
+}
+function openProfile(username){
+  openSheet('<h2>@'+esc(username)+'</h2><div id="profBody"><div class="empty-state">Loading…</div></div>');
+  api("GET","/u/"+encodeURIComponent(username)).then(function(j){
+    if(!j.ok){$("profBody").innerHTML='<div class="empty-state">'+esc(errMsg(j))+'</div>';return}
+    var u=j.user,c=j.counts;window.__profPosts=j.posts||[];
+    var btn=j.me?'<button class="btn ghost" id="pEdit" type="button">Edit profile'+(meCache&&meCache.requests?' · '+meCache.requests+' request'+(meCache.requests>1?'s':''):'')+'</button>'
+      :'<button class="btn '+(j.follow==="none"?'primary':'ghost')+'" id="pFollow" type="button">'+(j.follow==="following"?"Following ✓":j.follow==="requested"?"Requested":"Follow")+'</button>';
+    var h='<div class="prof">'+avatarHTML(u,"big")+'<h3>'+esc(u.name)+'</h3><div class="handle">@'+esc(u.username)+(u.private?' · 🔒 Private':'')+'</div>'+(u.bio?'<p class="bio">'+esc(u.bio)+'</p>':'')+
+      '<div class="counts"><div><b>'+c.finished+'</b>Books read</div><div><b>'+c.followers+'</b>Followers</div><div><b>'+c.following+'</b>Following</div></div>'+
+      '<div class="actions" style="margin:0 0 16px">'+btn+(j.me?'':'<button class="btn ghost" id="pMore" type="button" style="flex:0 0 56px" aria-label="More">⋯</button>')+'</div></div>';
+    if(!j.visible)h+='<div class="card join"><div style="font-size:2rem">🔒</div><h3>This shelf is private</h3><p>Follow @'+esc(u.username)+' to see their books and posts.</p></div>';
+    else{
+      var bk=j.books||[];
+      h+='<div class="segs" id="pTabs" style="margin-bottom:12px"><button type="button" data-v="shelf" aria-pressed="true">Shelf · '+bk.length+'</button><button type="button" data-v="posts" aria-pressed="false">Posts · '+c.posts+'</button></div><div id="pPane"></div>';
+    }
+    $("profBody").innerHTML=h;
+    function pane(v){
+      if(v==="shelf")$("pPane").innerHTML=(j.books||[]).length?'<div class="pgrid">'+j.books.map(function(b){var fb={id:"g"+b.id,title:b.title,author:b.author,genre:b.genre||"Other",cover:b.cover};return '<div class="cell" title="'+esc(b.title)+'">'+(b.cover?'<img class="cover" src="'+esc(b.cover)+'" alt="'+esc(b.title)+'" loading="lazy" decoding="async">':fake(fb))+(b.status==="Reading"?'<i aria-label="Reading now"></i>':'')+(b.rating?'<em>'+b.rating+'★</em>':'')+'</div>'}).join("")+'</div>':'<p class="note">No books on this shelf yet.</p>';
+      else $("pPane").innerHTML=(j.posts||[]).length?j.posts.map(postHTML).join(""):'<p class="note">No posts yet.</p>';
+    }
+    if(j.visible){pane("shelf");$("pTabs").onclick=function(e){var v=e.target.getAttribute("data-v");if(!v)return;[].forEach.call(this.children,function(b){b.setAttribute("aria-pressed",b.getAttribute("data-v")===v)});pane(v)}}
+    if($("pEdit"))$("pEdit").onclick=openEditProfile;
+    if($("pFollow"))$("pFollow").onclick=function(){var b=this,un=j.follow!=="none";b.disabled=true;api(un?"DELETE":"POST","/u/"+encodeURIComponent(u.username)+"/follow").then(function(){feedPosts=[];openProfile(u.username)})};
+    if($("pMore"))$("pMore").onclick=function(){openSheet('<h2>@'+esc(u.username)+'</h2><div class="menu"><button class="btn ghost" id="uRep" type="button">Report @'+esc(u.username)+'</button><button class="btn ghost" id="uBlock" type="button">Block @'+esc(u.username)+'</button><button class="btn ghost" id="uBack" type="button">Back to profile</button></div>');
+      $("uRep").onclick=function(){openReport("user",u.username)};$("uBlock").onclick=function(){blockUser(u.username)};$("uBack").onclick=function(){openProfile(u.username)}};
+  });
+}
+function openFind(){
+  openSheet('<h2>Find readers</h2><input class="search" id="uq" type="search" placeholder="Search by name or @username" autocomplete="off"><div class="ulist" id="uRes"><p class="note">Type at least 2 letters.</p></div>');
+  var tm;$("uq").oninput=function(){clearTimeout(tm);var v=this.value.trim().replace(/^@/,"");tm=setTimeout(function(){if(v.length<2){$("uRes").innerHTML='<p class="note">Type at least 2 letters.</p>';return}
+    api("GET","/search?q="+encodeURIComponent(v)).then(function(j){$("uRes").innerHTML=j.ok&&j.users.length?j.users.map(function(u){return '<button class="urow" type="button" data-user="'+esc(u.username)+'">'+avatarHTML(u)+'<span class="n"><b>'+esc(u.name)+'</b><span>@'+esc(u.username)+(u.private?' · 🔒':'')+'</span></span></button>'}).join(""):'<p class="note">No readers found.</p>'})},350)};
+  $("uRes").onclick=function(e){var t=e.target.closest("[data-user]");if(t)openProfile(t.getAttribute("data-user"))};
+  setTimeout(function(){$("uq").focus()},150);
+}
+function pickersHTML(av,color){
+  return '<div class="field"><label>Picture</label><div class="pick" id="avPick">'+AVATARS.map(function(a){return '<button type="button" data-a="'+a+'" aria-pressed="'+(a===av)+'">'+a+'</button>'}).join("")+'</div></div>'+
+    '<div class="field"><label>Colour</label><div class="pick" id="colPick">'+[0,1,2,3,4,5,6,7].map(function(c){return '<button type="button" data-c="'+c+'" aria-pressed="'+(c===color)+'" aria-label="Colour '+(c+1)+'"><span class="sw c'+c+'"></span></button>'}).join("")+'</div></div>';
+}
+function bindPickers(st){
+  $("avPick").onclick=function(e){var b=e.target.closest("[data-a]");if(!b)return;st.avatar=b.getAttribute("data-a");[].forEach.call(this.children,function(x){x.setAttribute("aria-pressed",x===b)})};
+  $("colPick").onclick=function(e){var b=e.target.closest("[data-c]");if(!b)return;st.color=+b.getAttribute("data-c");[].forEach.call(this.children,function(x){x.setAttribute("aria-pressed",x===b)})};
+}
+function openSignup(){
+  var st={avatar:"📚",color:0};
+  openSheet('<h2>Create your profile</h2>'+
+    '<div class="field"><label for="suUser">Username</label><input id="suUser" autocapitalize="none" autocomplete="off" spellcheck="false" maxlength="20" placeholder="e.g. cozyreads"></div>'+
+    '<div class="field"><label for="suName">Display name</label><input id="suName" maxlength="40" placeholder="Your name or nickname"></div>'+pickersHTML(st.avatar,st.color)+
+    '<label class="toggle" style="margin:6px 0 14px"><input type="checkbox" id="suPriv"> Make my profile private</label>'+
+    '<label class="toggle" style="margin:0 0 16px;align-items:flex-start;font-weight:600"><input type="checkbox" id="suAgree" style="margin-top:2px"> <span>I\'m 13 or older and I\'ll be kind. Don\'t share personal info like your address or phone number. Posts that get reported may be hidden.</span></label>'+
+    '<div class="lockmsg" id="suMsg"></div><div class="actions"><button class="btn primary" id="suGo" type="button">Create profile</button></div>');
+  bindPickers(st);
+  $("suUser").oninput=function(){this.value=this.value.toLowerCase().replace(/[^a-z0-9_.]/g,"")};
+  $("suGo").onclick=function(){var l=getLic(),b=this;$("suMsg").textContent="";b.disabled=true;
+    api("POST","/signup",{key:l&&l.key,username:$("suUser").value,name:$("suName").value,avatar:st.avatar,color:st.color,private:$("suPriv").checked,agree:$("suAgree").checked}).then(function(j){b.disabled=false;
+      if(j.ok){setSession(j.token);meCache=j.me;scheduleSync(true);closeSheet();toast("Welcome, @"+j.me.username+"!");feedTab="discover";openFeed()}else $("suMsg").textContent=errMsg(j)})
+    .catch(function(){b.disabled=false;$("suMsg").textContent="Couldn't connect. Check your internet."})};
+}
+function openEditProfile(){
+  var m=meCache||{},st={avatar:m.avatar||"📚",color:+m.color||0};
+  openSheet('<h2>Edit profile</h2>'+
+    '<div class="field"><label for="epName">Display name</label><input id="epName" maxlength="40" value="'+esc(m.name||"")+'"></div>'+
+    '<div class="field"><label for="epBio">Bio</label><textarea id="epBio" rows="3" maxlength="160" placeholder="Favourite genres, current obsession, reading goal…">'+esc(m.bio||"")+'</textarea></div>'+pickersHTML(st.avatar,st.color)+
+    '<label class="toggle" style="margin:6px 0 4px"><input type="checkbox" id="epPriv"'+(m.private?' checked':'')+'> Private profile</label><p class="note" style="margin:0 0 14px">Private: only followers you approve see your shelf and posts.</p>'+
+    '<div class="field"><label>Follow requests</label><div class="ulist" id="reqList"><p class="note">Loading…</p></div></div>'+
+    '<div class="actions"><button class="btn primary" id="epSave" type="button">Save</button></div>'+
+    '<div class="actions" style="margin-top:22px"><button class="btn ghost" id="epOut" type="button">Sign out</button><button class="btn danger" id="epDel" type="button" style="flex:1;border:1px solid var(--line);border-radius:14px">Delete account</button></div>'+
+    '<p class="note">Deleting your account removes your profile, posts, comments and likes from the community. Your books stay on this phone.</p>');
+  bindPickers(st);
+  api("GET","/requests").then(function(j){var us=j.ok?j.users:[];$("reqList").innerHTML=us.length?us.map(function(u){return '<div class="urow">'+avatarHTML(u)+'<span class="n"><b>'+esc(u.name)+'</b><span>@'+esc(u.username)+'</span></span><button class="sbtn" data-acc="'+esc(u.username)+'">Approve</button><button class="sbtn" data-dec="'+esc(u.username)+'">✕</button></div>'}).join(""):'<p class="note">No requests right now.</p>'});
+  $("reqList").onclick=function(e){var a=e.target.getAttribute("data-acc"),d=e.target.getAttribute("data-dec");if(!a&&!d)return;
+    api("POST","/requests/"+encodeURIComponent(a||d),{accept:!!a}).then(function(){e.target.closest(".urow").remove();if(meCache)meCache.requests=Math.max(0,(meCache.requests||1)-1);$("feedDot").hidden=!(meCache&&meCache.requests)})};
+  $("epSave").onclick=function(){api("PATCH","/me",{name:$("epName").value,bio:$("epBio").value,avatar:st.avatar,color:st.color,private:$("epPriv").checked}).then(function(j){if(j.ok){meCache=Object.assign(meCache||{},j.me);toast("Profile saved");openProfile(j.me.username);if(tab==="feed")openFeed()}else toast(errMsg(j))})};
+  $("epOut").onclick=function(){api("POST","/logout").then(function(){setSession("");meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Signed out")})};
+  var armed=false;$("epDel").onclick=function(){if(!armed){armed=true;this.textContent="Tap again to delete";return}api("DELETE","/account").then(function(j){if(j.ok){setSession("");meCache=null;closeSheet();if(tab==="feed")openFeed();toast("Account deleted")}else toast(errMsg(j))})};
+}
+
 /* ---------- add to home screen ---------- */
 var UA=navigator.userAgent||"";
 var isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
@@ -637,7 +883,7 @@ $("installBtn").onclick=function(){if(!deferredInstall)return;deferredInstall.pr
 // no pinch-zoom (Safari ignores user-scalable=no in the browser)
 ["gesturestart","gesturechange"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
 
-render(); fillMissingCovers(); licenseGate(); maybeInstallPrompt();
+render(); fillMissingCovers(); licenseGate(); maybeInstallPrompt(); if(!isLocked()){quietSignIn();scheduleSync(true)}
 })();
 </script>
 </body>
