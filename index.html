@@ -208,6 +208,10 @@ nav.tabs button{position:relative}
 .join h3{font-family:var(--display);font-size:1.35rem;margin:10px 0 6px}
 .join p{color:var(--muted);margin:0 0 16px;line-height:1.45}
 .menu{display:flex;flex-direction:column;gap:8px}
+.sbtn.aud{background:var(--card);border-color:var(--line);color:var(--ink)}
+.audcard{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin:6px 0 4px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);text-decoration:none}
+.audcard .ai{font-size:1.6rem}.audcard .at{min-width:0;display:flex;flex-direction:column;gap:2px}.audcard .at b{font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.audcard .at span{font-size:.78rem;color:var(--muted)}.audcard .ag{font-weight:800;font-size:.85rem;color:var(--btn);white-space:nowrap}
 /* store */
 .srow{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px}
 .srow .cover,.srow .fakecover{width:64px}
@@ -627,6 +631,8 @@ var AMAZON_TAG="benjistore07-20";   // Amazon Associates tracking ID, e.g. "benj
 var SF="key,title,author_name,cover_i,first_publish_year,number_of_pages_median,ratings_average,ratings_count,want_to_read_count,subject";
 var CHIPS=[["trending","Trending"],["romantasy","Romantasy"],["fantasy","Fantasy"],["romance","Romance"],["thriller","Thriller"],["mystery","Mystery"],["science_fiction","Sci-Fi"],["horror","Horror"],["self-help","Self-help"],["biography","Memoir"]];
 var storeChip="trending", storeDocs=[], storeCache={}, storeTimer, storeSeq=0;
+// Audible free trials pay a flat bounty through Amazon Associates; this opens the audiobook search for the title with your tag
+function audibleUrl(t,a){return "https://www.amazon.com/s?k="+encodeURIComponent((t||"")+" "+(a||""))+"&i=audible"+(AMAZON_TAG?"&tag="+encodeURIComponent(AMAZON_TAG):"")}
 function amazonUrl(t,a){return "https://www.amazon.com/s?k="+encodeURIComponent((t||"")+" "+(a||""))+"&i=stripbooks"+(AMAZON_TAG?"&tag="+encodeURIComponent(AMAZON_TAG):"")}
 function getJSON(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
 function storeFetch(kind,v){
@@ -655,7 +661,7 @@ function drawStore(docs){
   storeDocs=docs;
   $("storeList").innerHTML=docs.length?docs.map(function(d,i){var fb={id:"s"+i,title:d.title,author:docAuthor(d),genre:guessGenre(d.subject),cover:d.cover_i?coverUrl(d.cover_i):""};var have=inShelf(d);
     return '<div class="srow"><button class="bookbtn" data-sd="'+i+'" aria-label="Details for '+esc(d.title)+'">'+(fb.cover?'<img class="cover" src="'+fb.cover+'" alt="" loading="lazy" decoding="async">':fake(fb))+'</button><div class="info"><button class="open" data-sd="'+i+'">'+esc(d.title)+'</button><div class="by">'+esc(fb.author||"Unknown author")+(d.first_publish_year?" · "+d.first_publish_year:"")+'</div>'+rateHTML(d)+
-    '<div class="sbtns"><button class="sbtn'+(have?' done':'')+'" data-tbr="'+i+'">'+(have?'✓ On your shelf':'+ To read')+'</button><a class="sbtn amz" href="'+amazonUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">Amazon ↗</a></div></div></div>'}).join("")
+    '<div class="sbtns"><button class="sbtn'+(have?' done':'')+'" data-tbr="'+i+'">'+(have?'✓ On your shelf':'+ To read')+'</button><a class="sbtn amz" href="'+amazonUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">Amazon ↗</a><a class="sbtn aud" href="'+audibleUrl(d.title,fb.author)+'" target="_blank" rel="noopener sponsored">🎧 Listen free</a></div></div></div>'}).join("")
     :'<div class="empty-state">No books found. Try another title or author.</div>';
 }
 function loadStore(kind,v){
@@ -671,6 +677,7 @@ function openStoreBook(d){
   openSheet('<h2>'+esc(d.title)+'</h2><div class="detail">'+(fb.cover?'<img class="cover" src="'+fb.cover+'" alt="Cover of '+esc(d.title)+'">':fake(fb))+
     '<div style="min-width:0"><div class="title">'+esc(d.title)+'</div><div class="author">'+esc(a||"Unknown author")+'</div><div class="note" style="margin:6px 0">'+[d.first_publish_year,d.number_of_pages_median?d.number_of_pages_median+" pages":""].filter(Boolean).join(" · ")+'</div>'+rateHTML(d)+'</div></div>'+
     '<div class="actions" style="margin:0 0 6px"><button class="btn ghost" id="dTbr" type="button">'+(inShelf(d)?'✓ On your shelf':'+ Add to To read')+'</button><a class="btn primary" style="text-align:center;text-decoration:none;background:#FFD814;color:#111" href="'+amazonUrl(d.title,a)+'" target="_blank" rel="noopener sponsored">Price &amp; reviews on Amazon ↗</a></div>'+
+    '<a class="audcard" href="'+audibleUrl(d.title,a)+'" target="_blank" rel="noopener sponsored"><span class="ai" aria-hidden="true">🎧</span><span class="at"><b>Listen to '+esc(d.title)+'</b><span>Free Audible trial for new members · cancel anytime</span></span><span class="ag">Try free ↗</span></a>'+
     '<h3 class="sec">About this book</h3><p class="desc" id="dDesc">Loading…</p>'+
     ((d.subject||[]).length?'<div class="subj">'+d.subject.slice(0,8).map(function(x){return '<span>'+esc(x)+'</span>'}).join("")+'</div>':'')+
     '<p class="note">Book details from Open Library'+(AMAZON_TAG?'. As an Amazon Associate I earn from qualifying purchases.':'.')+'</p>');
