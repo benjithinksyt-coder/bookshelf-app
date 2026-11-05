@@ -9,9 +9,9 @@
 <link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Bookshelf">
+<meta name="apple-mobile-web-app-title" content="Book Club">
 <meta name="theme-color" content="#F7F1E6" id="themeColor">
-<title>My Reading Year</title>
+<title>The Book Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <style>
@@ -251,7 +251,7 @@ nav.tabs button{position:relative}
 <body>
 <div class="app"><div class="scroller" id="scroller"><div class="wrap">
   <header class="top">
-    <div class="brand"><small id="yearLabel">2026</small>My Reading Year</div>
+    <div class="brand"><small id="yearLabel">2026</small>The Book Club</div>
     <button class="iconbtn" id="settingsBtn" aria-label="Settings">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
@@ -324,17 +324,17 @@ nav.tabs button{position:relative}
 <div class="toast" id="toast" hidden></div>
 <div class="install" id="install" hidden role="dialog" aria-modal="true" aria-labelledby="installTitle">
   <img class="appicon" src="icon-180.png" alt="">
-  <h2 id="installTitle">Put My Reading Year on your Home Screen</h2>
+  <h2 id="installTitle">Put The Book Club on your Home Screen</h2>
   <p>It opens full screen like a real app, with no address bar, one tap from your Home Screen.</p>
   <ol class="isteps" id="iosSteps">
     <li><b class="n">1</b><span>Tap the <b>Share</b> button <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Share icon"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg> in Safari's toolbar</span></li>
     <li><b class="n">2</b><span>Scroll down and tap <b>Add to Home Screen</b></span></li>
-    <li><b class="n">3</b><span>Tap <b>Add</b>, then open <b>Bookshelf</b> from your Home Screen</span></li>
+    <li><b class="n">3</b><span>Tap <b>Add</b>, then open <b>Book Club</b> from your Home Screen</span></li>
   </ol>
   <ol class="isteps" id="droidSteps" hidden>
     <li><b class="n">1</b><span>Tap the <b>⋮</b> menu in Chrome</span></li>
     <li><b class="n">2</b><span>Tap <b>Add to Home screen</b> (or <b>Install app</b>)</span></li>
-    <li><b class="n">3</b><span>Open <b>Bookshelf</b> from your Home Screen</span></li>
+    <li><b class="n">3</b><span>Open <b>Book Club</b> from your Home Screen</span></li>
   </ol>
   <button class="btn primary" id="installBtn" type="button" hidden>Install app</button>
   <p class="tip">Unlock and add your books in the Home Screen app. It keeps its own shelf, separate from Safari.</p>
@@ -344,7 +344,7 @@ nav.tabs button{position:relative}
 <div class="lock" id="lock" hidden role="dialog" aria-modal="true" aria-labelledby="lockTitle">
   <form class="lockcard" id="lockForm" autocomplete="off">
     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--burgundy)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v15H6.5A2.5 2.5 0 0 0 4 20.5 2.5 2.5 0 0 0 6.5 23H19v-5"/><path d="M9 8h6M9 11h4"/></svg>
-    <h2 id="lockTitle">Unlock your reading year</h2>
+    <h2 id="lockTitle">Unlock The Book Club</h2>
     <p>Enter the license key from your Payhip receipt email. You only need to do this once on each device.</p>
     <input id="lockKey" placeholder="Paste your key" aria-label="License key" autocapitalize="characters" spellcheck="false">
     <div class="lockmsg" id="lockMsg" aria-live="polite"></div>
@@ -590,7 +590,7 @@ function showLock(msg){
   var started=trialStart(), left=trialLeft(), pb=$("peekBtn");
   pb.hidden=!!started&&left<=0;
   pb.textContent=started?("Keep trying · "+timeLeft(left)):"Try it free for 3 hours";
-  $("buyLine").innerHTML=BUY_URL?'No key yet? <a href="'+esc(BUY_URL)+'" target="_blank" rel="noopener">Get My Reading Year</a>':'';
+  $("buyLine").innerHTML=BUY_URL?'No key yet? <a href="'+esc(BUY_URL)+'" target="_blank" rel="noopener">Get The Book Club</a>':'';
 }
 $("peekBtn").onclick=function(){
   var first=!trialStart();if(first)startTrial();

@@ -1,6 +1,6 @@
 {
-  "name": "My Reading Year",
-  "short_name": "Bookshelf",
+  "name": "The Book Club",
+  "short_name": "Book Club",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
