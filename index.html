@@ -562,7 +562,9 @@ var LKEY="bookshelf-license-v1", RECHECK_DAYS=7;
 var REASONS={not_found:"That key wasn't found. Check it against your Payhip receipt.",disabled:"This key has been turned off (for example after a refund).",too_many:"This key has been used on too many devices. Contact the seller to reset it.",bad_format:"That doesn't look like a license key. Copy it from your receipt.",server_not_set_up:"Unlocking isn't set up yet. Please try again later."};
 function getLic(){try{return JSON.parse(localStorage.getItem(LKEY))}catch(e){return null}}
 function setLic(v){try{if(v)localStorage.setItem(LKEY,JSON.stringify(v));else localStorage.removeItem(LKEY)}catch(e){}}
-function callKey(path,key){return fetch(CHECK_URL.replace(/\/$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:key})}).then(function(r){return r.json()})}
+// never hang: give every server call 15 seconds
+function tfetch(url,opts){var c=window.AbortController?new AbortController():null,t=setTimeout(function(){c&&c.abort()},15000);if(c)opts.signal=c.signal;return fetch(url,opts).finally(function(){clearTimeout(t)})}
+function callKey(path,key){return tfetch(CHECK_URL.replace(/\/$/,"")+path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:key})}).then(function(r){return r.json()})}
 /* free trial: full app for 3 hours per browser, then the lock comes back */
 var TKEY="bookshelf-trial-v1", TRIAL_MS=3*60*60*1000, memTrial=0, ticker=null;
 function trialStart(){try{return +localStorage.getItem(TKEY)||memTrial}catch(e){return memTrial}}
@@ -691,7 +693,7 @@ function session(){try{return localStorage.getItem(SKEY)||""}catch(e){return ""}
 function setSession(t){try{if(t)localStorage.setItem(SKEY,t);else localStorage.removeItem(SKEY)}catch(e){}}
 function api(method,path,body){
   var h={"Content-Type":"application/json"};var t=session();if(t)h.Authorization="Bearer "+t;
-  return fetch(CHECK_URL.replace(/\/$/,"")+"/api"+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined})
+  return tfetch(CHECK_URL.replace(/\/$/,"")+"/api"+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined})
     .then(function(r){return r.json().catch(function(){return {ok:false,reason:"server_error"}})})
     .then(function(j){if(j&&j.reason==="signed_out"){setSession("");meCache=null}return j});
 }
