@@ -845,7 +845,8 @@ function doSync(){
   if(!session()||!meCache)return;
   var cur={},rows={};state.books.forEach(function(b){var r=syncRow(b);rows[b.id]=r;cur[b.id]=JSON.stringify(r)});
   var last=getSynced();
-  if(!last){api("PUT","/sync",{books:Object.keys(rows).map(function(k){return rows[k]})}).then(function(j){if(j.ok)setSynced(cur)}).catch(function(){});return}
+  // first sync on this phone ADDS its books (never wipes books that came from your other phones)
+  if(!last){api("PATCH","/sync",{upsert:Object.keys(rows).map(function(k){return rows[k]}),remove:[]}).then(function(j){if(j.ok)setSynced(cur)}).catch(function(){});return}
   var up=[],rm=[];
   Object.keys(cur).forEach(function(k){if(last.map[k]!==cur[k])up.push(rows[k])});
   Object.keys(last.map).forEach(function(k){if(!(k in cur))rm.push(k)});
@@ -1284,7 +1285,7 @@ function scheduleStats(){if(!session())return;clearTimeout(statsTimer);statsTime
   api("PATCH","/stats",{level:levelOf(R.xp),xp:R.xp,minutes:R.totalMin,streak:R.streak.count,badges:Object.keys(R.ach),frame:myFrame(),bg:myBg()}).catch(function(){})},3000)}
 
 /* ---------- update banner: Home Screen apps can hold on to an old copy ---------- */
-var BUILD="2026-11-04.4", updShown=false;
+var BUILD="2026-11-04.5", updShown=false;
 function checkForUpdate(){
   if(updShown||location.protocol==="file:")return;
   fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){
